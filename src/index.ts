@@ -19,7 +19,7 @@ client.on(REAPER_EVENTS.trackPan(1), function (msg: Message) {
     handleTrackPan(msg)
 });
 
-client.on('error', (err) => {
+client.on('error', (err: any) => {
     console.error(err);
 });
 
