@@ -1,0 +1,10 @@
+{
+	"dependencies": {
+		"midi": "^2.0.0"
+	},
+	"devDependencies": {
+		"@types/midi": "^2.0.3",
+		"@types/node": "^22.10.2",
+		"tsx": "^4.19.2"
+	}
+}
