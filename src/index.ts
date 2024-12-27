@@ -20,8 +20,22 @@ client.on('open', () => {
     console.log('OSC Server connected');
 });
 
-client.on("/track/1/volume", function (msg, rinfo) {
-    // console.log(msg);
+type Message = {
+    offset: number,
+    address: string,
+    types: string,
+    args: any[]
+}
+
+type Rinfo = {
+    address: string,
+    family: string,
+    port: number,
+    size: number
+}
+
+client.on("/track/1/volume", function (msg: Message, rinfo: Rinfo) {
+    console.log(rinfo);
     const { args } = msg;
     trackVolume = args[0];
     console.log('trackVolume', trackVolume);
