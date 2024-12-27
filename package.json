@@ -1,4 +1,7 @@
 {
+	"scripts": {
+		"dev:input": "tsx watch src/input.ts"
+	},
 	"dependencies": {
 		"midi": "^2.0.0"
 	},
