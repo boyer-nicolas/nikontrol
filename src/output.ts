@@ -1,6 +1,7 @@
 import { VPORT_NAME } from '@/lib/constants';
 import { Output } from 'midi';
 import * as readline from 'readline';
+import osc from 'node-osc'
 
 const output = new Output();
 
@@ -66,7 +67,34 @@ process.stdin.on('keypress', (index, key: Key) => {
     }
 });
 
-console.log('Press any key...');
+const oscServer = new osc.Server(9000, '0.0.0.0'); // Create an OSC server
+console.log('OSC server listening on port 3333');
+
+oscServer.on("message", function (msg, rinfo) {
+    console.log("New Reaper message:");
+    console.log(msg);
+});
+
+// Send an OSC message to Reaper to get the volume
+const oscClient = new osc.Client('localhost', 8000); // Replace with Reaper's OSC port
+console.log('OSC client connected to Reaper');
+
+function getRandomFloat(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+}
+
+function getVolume() {
+    oscClient.send({
+        address: '/track/1/volume',
+        args: [getRandomFloat(0, 1)]
+    }, function (err) {
+        if (err) console.error(err);
+    });
+}
+
+setInterval(() => {
+    getVolume();
+}, 1000);
 
 process.on('SIGTERM', () => {
     handleExit()

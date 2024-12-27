@@ -24,6 +24,9 @@ importers:
       '@types/node':
         specifier: ^22.10.2
         version: 22.10.2
+      '@types/node-osc':
+        specifier: ^6.0.3
+        version: 6.0.3
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
@@ -177,6 +180,9 @@ packages:
   '@types/midi@2.0.3':
     resolution: {integrity: sha512-pWHbPU2FDq+ice7cjhZOEH19UUi55qDkdRggRZHy+1HKmYBRVZjaUBZofI0umL93PWif3Xr9EVwpmyUp1ecQnQ==}
 
+  '@types/node-osc@6.0.3':
+    resolution: {integrity: sha512-f0JUTDVAlk/mV9RH6jE6g/8Y7l+Mvi3f1x7xv0RG3VI1PktaXEd60mR+4plpMS9VbRovFoPsS7qaaIDhFXdaEw==}
+
   '@types/node@22.10.2':
     resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==}
 
@@ -306,6 +312,10 @@ snapshots:
     optional: true
 
   '@types/midi@2.0.3':
+    dependencies:
+      '@types/node': 22.10.2
+
+  '@types/node-osc@6.0.3':
     dependencies:
       '@types/node': 22.10.2
 
