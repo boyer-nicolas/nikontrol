@@ -1,17 +1,16 @@
 import { VPORT_NAME } from '@/lib/constants';
 import { Input } from 'midi';
 
-console.log(`Creating input ${VPORT_NAME}...`);
 const input = new Input();
 
-input.openVirtualPort(VPORT_NAME);
+input.openVirtualPort(VPORT_NAME)
 
 // Configure a callback.
-console.log('Listening for MIDI messages...');
-input.on('message', (msg) => {
-    console.log(msg);
+console.log(`Opening port ${VPORT_NAME}... (Ctrl+C to exit)`);
+input.on('message', (number, message) => {
+    console.log('number', number);
+    console.log('message', message);
 });
-
 
 process.on('SIGTERM', () => {
     input.closePort()
