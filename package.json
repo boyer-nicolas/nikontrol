@@ -1,13 +1,12 @@
 {
 	"scripts": {
-		"dev:input": "tsx watch src/input.ts",
-		"dev:output": "tsx watch src/output.ts",
-		"input": "tsx src/input.ts",
-		"output": "tsx src/output.ts"
+		"dev": "tsx watch src/index.ts",
+		"start": "tsx src/index.ts"
 	},
 	"dependencies": {
 		"midi": "^2.0.0",
 		"node-osc": "^9.1.4",
+		"osc-js": "^2.4.1",
 		"readline": "^1.3.0"
 	},
 	"devDependencies": {
