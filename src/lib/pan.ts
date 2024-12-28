@@ -1,9 +1,9 @@
 import { Message } from '@/lib/events';
 
 export enum TRACK_PANS {
-    DEFAULT = 0.5,
-    MAX = 1,
-    MIN = 0
+    DEFAULT = 0.5, // Center
+    MAX = 1, // Right
+    MIN = 0 // Left
 }
 
 export let trackPan = TRACK_PANS.DEFAULT;
@@ -21,7 +21,7 @@ export function handleTrackPan(msg: Message) {
 
     console.log('trackPan', trackPan);
     if (TRACK_PANS.DEFAULT === trackPan) {
-        console.log('Track pan back to default');
+        console.log('Track pan set to default');
     }
 
     if (TRACK_PANS.MAX === trackPan) {

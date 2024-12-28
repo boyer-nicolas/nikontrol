@@ -1,9 +1,9 @@
 import { Message } from '@/lib/events';
 
 export enum TRACK_VOLUMES {
-    DEFAULT = 0.7160000205039978,
-    MAX = 1,
-    MIN = 0.0025138729251921177
+    DEFAULT = 0.7160000205039978, // 0.00db
+    MAX = 1, // +6.00db
+    MIN = 0.0025138729251921177 // -inf (-150db)
 }
 
 export let trackVolume = TRACK_VOLUMES.DEFAULT;
@@ -21,7 +21,7 @@ export function handleTrackVolume(msg: Message) {
 
     console.log('trackVolume', trackVolume);
     if (TRACK_VOLUMES.DEFAULT === trackVolume) {
-        console.log('Track volume back to default');
+        console.log('Track volume set to default');
     }
 
     if (TRACK_VOLUMES.MAX === trackVolume) {

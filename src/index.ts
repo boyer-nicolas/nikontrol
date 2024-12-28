@@ -10,13 +10,16 @@ client.on('open', () => {
     console.log('OSC Server connected');
 });
 
-
 client.on(REAPER_EVENTS.trackVolume(1), function (msg: Message) {
     handleTrackVolume(msg)
 });
 
 client.on(REAPER_EVENTS.trackPan(1), function (msg: Message) {
     handleTrackPan(msg)
+});
+
+client.on(REAPER_EVENTS.trackName(1), function (msg: Message) {
+    console.log('Track 1 Name:', msg.args[0]);
 });
 
 client.on('error', (err: any) => {

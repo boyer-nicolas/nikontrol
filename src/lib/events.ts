@@ -1,8 +1,7 @@
 export const REAPER_EVENTS = {
-    currentTrackVolume: '/track/volume',
     trackVolume: (trackNumber: number) => `/track/${trackNumber}/volume`,
-    currentTrackPan: '/track/pan',
     trackPan: (trackNumber: number) => `/track/${trackNumber}/pan`,
+    trackName: (trackNumber: number) => `/track/${trackNumber}/name`,
 }
 
 export type Message = {
