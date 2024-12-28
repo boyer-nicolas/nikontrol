@@ -1,7 +1,7 @@
 // import * as readline from 'readline';
 import { selectTrackBank } from '@/lib/banks';
 import { CONFIG } from '@/lib/config';
-import { Message, REAPER_EVENTS, Rinfo } from '@/lib/events';
+import { Message, REAPER_EVENTS } from '@/lib/events';
 import { handleTrackPan } from '@/lib/pan';
 import { sendTrackCount } from '@/lib/tracks';
 import { handleTrackVolume } from '@/lib/volume';
@@ -17,21 +17,21 @@ client.on('open', () => {
 });
 
 for (let track = 0; track < CONFIG.TRACK_COUNT; track++) {
-    client.on(REAPER_EVENTS.TRACK_VOLUME(track), function (msg: Message) {
+    client.on(REAPER_EVENTS.TRACK_VOLUME(track), (msg: Message) => {
         handleTrackVolume(msg, track)
     });
-    client.on(REAPER_EVENTS.TRACK_VU_METER(track), function (msg: Message) {
+    client.on(REAPER_EVENTS.TRACK_VU_METER(track), (msg: Message) => {
         handleTrackVu(msg, track)
     });
-    client.on(REAPER_EVENTS.TRACK_PAN(track), function (msg: Message) {
+    client.on(REAPER_EVENTS.TRACK_PAN(track), (msg: Message) => {
         handleTrackPan(msg, track)
     });
-    client.on(REAPER_EVENTS.TRACK_NAME(track), function (msg: Message) {
+    client.on(REAPER_EVENTS.TRACK_NAME(track), (msg: Message) => {
         console.log(`Track ${track} Name:`, msg.args[0]);
     });
 }
 
-client.on('error', (err: any) => {
+client.on('error', (err: unknown) => {
     console.error(err);
 });
 

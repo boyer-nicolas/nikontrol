@@ -13,7 +13,7 @@ export type Message = {
     offset: number,
     address: string,
     types: string,
-    args: any[]
+    args: unknown[]
 }
 
 export type Rinfo = {
