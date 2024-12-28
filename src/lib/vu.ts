@@ -1,8 +1,8 @@
 import { Message } from '@/lib/events';
 
 export enum TRACK_VU_METERS {
-    MAX = 1, // +6.00db
-    MIN = 0 // -inf (-150db)
+    MAX = 1,
+    MIN = 0
 }
 
 /**
