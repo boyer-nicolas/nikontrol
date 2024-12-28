@@ -1,12 +1,12 @@
 import { Message } from '@/lib/events';
 
 export enum TRACK_PANS {
-    DEFAULT = 0.5, // Center
-    MAX = 1, // Right
-    MIN = 0 // Left
+    CENTER = 0.5,
+    RIGHT = 1,
+    LEFT = 0
 }
 
-export let trackPan = TRACK_PANS.DEFAULT;
+export let trackPan = TRACK_PANS.CENTER;
 
 /**
  * Handles messages from REAPER regarding track pan changes.
@@ -15,20 +15,20 @@ export let trackPan = TRACK_PANS.DEFAULT;
  *
  * @fires Console logs at the `log` level when the track pan changes to the default, max, or min values.
  */
-export function handleTrackPan(msg: Message) {
+export function handleTrackPan(msg: Message, track: number) {
     const { args } = msg;
     trackPan = args[0];
 
-    console.log('trackPan', trackPan);
-    if (TRACK_PANS.DEFAULT === trackPan) {
-        console.log('Track pan set to default');
+    console.log(`Track ${track} pan`, trackPan);
+    if (TRACK_PANS.CENTER === trackPan) {
+        console.log(`Track ${track} pan set to CENTER`);
     }
 
-    if (TRACK_PANS.MAX === trackPan) {
-        console.log('Track pan at max');
+    if (TRACK_PANS.RIGHT === trackPan) {
+        console.log(`Track ${track} pan set to RIGHT`);
     }
 
-    if (TRACK_PANS.MIN === trackPan) {
-        console.log('Track pan at min');
+    if (TRACK_PANS.LEFT === trackPan) {
+        console.log(`Track ${track} pan set to LEFT`);
     }
 }

@@ -15,20 +15,20 @@ export let trackVolume = TRACK_VOLUMES.DEFAULT;
  *
  * @fires Console logs at the `log` level when the track volume changes to the default, max, or min values.
  */
-export function handleTrackVolume(msg: Message) {
+export function handleTrackVolume(msg: Message, track: number) {
     const { args } = msg;
     trackVolume = args[0];
 
-    console.log('trackVolume', trackVolume);
+    console.log(`Track ${track} volume`, trackVolume);
     if (TRACK_VOLUMES.DEFAULT === trackVolume) {
         console.log('Track volume set to default');
     }
 
     if (TRACK_VOLUMES.MAX === trackVolume) {
-        console.log('Track volume at max');
+        console.log(`Track ${track} volume at max`);
     }
 
     if (TRACK_VOLUMES.MIN === trackVolume) {
-        console.log('Track volume at min');
+        console.log(`Track ${track} volume at min`);
     }
 }

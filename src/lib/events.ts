@@ -1,7 +1,12 @@
 export const REAPER_EVENTS = {
-    trackVolume: (trackNumber: number) => `/track/${trackNumber}/volume`,
-    trackPan: (trackNumber: number) => `/track/${trackNumber}/pan`,
-    trackName: (trackNumber: number) => `/track/${trackNumber}/name`,
+    TRACK_VOLUME: (trackNumber: number) => `/track/${trackNumber}/volume`,
+    TRACK_PAN: (trackNumber: number) => `/track/${trackNumber}/pan`,
+    TRACK_NAME: (trackNumber: number) => `/track/${trackNumber}/name`,
+    TRACK_COUNT: '/device/track/count',
+    TRACK_BANK_SELECT: '/device/track/bank/select',
+    TRACK_BANK_PREV: '/device/track/bank/-',
+    TRACK_BANK_NEXT: '/device/track/bank/+',
+    TRACK_VU_METER: (trackNumber: number) => `/track/${trackNumber}/vu`,
 }
 
 export type Message = {
