@@ -62,7 +62,7 @@ export class Bank {
      */
     public sendTrackCount() {
         this.client.send(new OSC.Message(DAWEvents.TrackCount, this.tracksCount));
-        signalLog(DAWSignals.TracksCount, this.tracksCount);
+        signalLog(DAWSignals.TracksCount, this.tracksCount, DAWEvents.TrackCount);
     }
 
 
@@ -83,7 +83,7 @@ export class Bank {
     public next() {
         this.activeBank++;
         this.client.send(new OSC.Message(DAWEvents.TrackBankNext));
-        signalLog(DAWSignals.BankNext, this.activeBank);
+        signalLog(DAWSignals.BankNext, this.activeBank, DAWEvents.TrackBankNext);
     }
 
     /**
@@ -93,7 +93,7 @@ export class Bank {
      */
     public prev() {
         this.client.send(new OSC.Message(DAWEvents.TrackBankPrev));
-        signalLog(DAWSignals.BankPrev, this.activeBank);
+        signalLog(DAWSignals.BankPrev, this.activeBank, DAWEvents.TrackBankPrev);
     }
 
     /**
@@ -106,6 +106,6 @@ export class Bank {
     public select(bank: number) {
         this.activeBank = bank;
         this.client.send(new OSC.Message(DAWEvents.TrackBankSelect, bank));
-        signalLog(DAWSignals.BankSelect, bank);
+        signalLog(DAWSignals.BankSelect, bank, DAWEvents.TrackBankSelect);
     }
 }
