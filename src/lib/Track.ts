@@ -1,4 +1,5 @@
 import { DAWEndpoint, onEvent, DAWEvents } from '@/lib/events';
+import { signalLog } from '@/lib/logger';
 import OSC from 'osc-js';
 
 interface ITrack {
@@ -46,7 +47,7 @@ export class Track {
         this.volume = this.defaultVolume;
         this.name = '';
 
-        console.log(`Track ${this.id} created`);
+        console.log(`➡️ Track ${this.id} created`);
     }
 
     /**
@@ -60,78 +61,60 @@ export class Track {
      *
      * When any of these messages are received, the corresponding property of the Track object is updated.
      */
-    listen(): void {
+    public listen(): void {
         // Volume
         onEvent({
             client: this.client,
             event: DAWEndpoint(DAWEvents.TrackVolume, this.id),
             callback: (value) => {
-                if (typeof value !== 'number') {
-                    throw new Error(`Track ${this.id} Volume is not a number`);
-                }
-
                 this.setVolume(value);
-            }
+            },
+            expectedType: 'number'
         });
 
         // Pan
         onEvent({
             client: this.client,
             event: DAWEndpoint(DAWEvents.TrackPan, this.id),
-
             callback: (value) => {
-                if (typeof value !== 'number') {
-                    throw new Error(`Track ${this.id} Pan is not a number`);
-                }
-
                 this.setPan(value);
-            }
+            },
+            expectedType: 'number'
         });
 
         // VU Meter
         onEvent({
             client: this.client,
             event: DAWEndpoint(DAWEvents.TrackVuMeter, this.id),
-
             callback: (value) => {
-                if (typeof value !== 'number') {
-                    throw new Error(`Track ${this.id} VU Meter is not a number`);
-                }
-
                 this.setVuMeter(value);
-            }
+            },
+            expectedType: 'number'
+
         });
 
         // Name
         onEvent({
             client: this.client,
             event: DAWEndpoint(DAWEvents.TrackName, this.id),
-
             callback: (value) => {
-                if (typeof value !== 'string') {
-                    throw new Error(`Track ${this.id} Name is not a string`);
-                }
-
                 this.setName(value);
-            }
+            },
+            expectedType: 'string'
         });
 
         // Mute
         onEvent({
             client: this.client,
             event: DAWEndpoint(DAWEvents.TrackMute, this.id),
-
             callback: (value) => {
-                if (typeof value !== 'number') {
-                    throw new Error(`Track ${this.id} VU Meter is not a number`);
-                }
-
                 // Value is 1 or 0
                 this.setMuted(value === 1);
-            }
+            },
+            expectedType: 'number'
         });
 
-        console.log(`Track ${this.id} listening for events from DAW...`);
+        console.log(`✅ Track ${this.id} listening for events from DAW...`);
     }
 
     /**
@@ -140,7 +123,7 @@ export class Track {
      * @param {number} volume - The new volume, between 0 (min) and 1 (max).
      * @memberof Track
      */
-    setVolume(volume: number): void {
+    private setVolume(volume: number): void {
         console.log(`Track ${this.id} Volume:`, volume);
         this.volume = volume;
     }
@@ -151,8 +134,19 @@ export class Track {
      * @returns {number} - The current volume, between 0 (min) and 1 (max).
      * @memberof Track
      */
-    getVolume(): number {
+    public getVolume(): number {
         return this.volume;
+    }
+
+    /**
+     * Sets the volume of the track in the DAW to the given level.
+     *
+     * @param {number} level - The new volume level, between 0 (min) and 1 (max).
+     * @memberof Track
+     */
+    public setDawVolumeLevel(level: number) {
+        this.client.send(new OSC.Message(DAWEndpoint(DAWEvents.TrackVolume, this.id), level));
+        signalLog(`Track ${this.id} Volume: ${level}`);
     }
 
     /**
@@ -161,7 +155,7 @@ export class Track {
      * @param {number} pan - The new pan, between 0 (left) and 1 (right).
      * @memberof Track
      */
-    setPan(pan: number): void {
+    private setPan(pan: number): void {
         console.log(`Track ${this.id} Pan:`, pan);
         this.pan = pan;
     }
@@ -172,8 +166,13 @@ export class Track {
      * @returns {number} - The current pan, between 0 (left) and 1 (right).
      * @memberof Track
      */
-    getPan(): number {
+    public getPan(): number {
         return this.pan;
+    }
+
+    public setDawPan(pan: number) {
+        this.client.send(new OSC.Message(DAWEndpoint(DAWEvents.TrackPan, this.id), pan));
+        signalLog(`Track ${this.id} Pan: ${pan}`);
     }
 
     /**
@@ -182,8 +181,7 @@ export class Track {
      * @param {number} vuMeter - The new VU meter value, between 0 (min) and 1 (max).
      * @memberof Track
      */
-    setVuMeter(vuMeter: number): void {
-        console.log(`Track ${this.id} VU Meter:`, vuMeter);
+    private setVuMeter(vuMeter: number): void {
         this.vuMeter = vuMeter;
     }
 
@@ -193,7 +191,7 @@ export class Track {
      * @returns {number} - The current VU meter value, between 0 (min) and 1 (max).
      * @memberof Track
      */
-    getVuMeter(): number {
+    public getVuMeter(): number {
         return this.vuMeter;
     }
 
@@ -203,7 +201,7 @@ export class Track {
      * @param {string} name - The new name of the track.
      * @memberof Track
      */
-    setName(name: string): void {
+    private setName(name: string): void {
         console.log(`Track ${this.id} Name:`, name);
         this.name = name;
     }
@@ -214,11 +212,11 @@ export class Track {
      * @returns {string} - The name of the track.
      * @memberof Track
      */
-    getName(): string {
+    public getName(): string {
         return this.name;
     }
 
-    setMuted(muted: boolean): void {
+    private setMuted(muted: boolean): void {
         console.log(`Track ${this.id} Muted:`, muted);
         this.muted = muted;
     }
@@ -229,7 +227,7 @@ export class Track {
      * @returns {boolean} - Whether the track is muted.
      * @memberof Track
      */
-    isMuted(): boolean {
+    public isMuted(): boolean {
         return this.muted;
     }
 }

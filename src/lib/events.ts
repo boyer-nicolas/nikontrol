@@ -10,6 +10,11 @@ export enum DAWEvents {
     TrackBankSelect = '/device/track/bank/select',
     TrackBankPrev = '/device/track/bank/-',
     TrackBankNext = '/device/track/bank/+',
+    Metronome = '/click',
+    Record = '/record',
+    Stop = '/stop',
+    Play = '/play',
+    Pause = '/pause',
 }
 
 export function DAWEndpoint(endpoint: DAWEvents, id?: number) {
@@ -37,10 +42,11 @@ export type Rinfo = {
     size: number
 }
 
-interface IOnEvent {
+interface IOnEvent<T extends 'number' | 'string'> {
     client: OSC,
     event: string,
-    callback: (value: number | string) => void
+    callback: (value: T extends 'number' ? number : string) => void,
+    expectedType?: T
 }
 
 /**
@@ -54,14 +60,28 @@ interface IOnEvent {
  * @param {(value: number | string) => void} opts.callback - The callback that will
  * be called when the event is received. The callback will be called with a single
  * argument, the value of the event.
+ * @param {'number' | 'string'} [opts.expectedType='number'] - The type of the
+ * value that is expected in the event.
  */
-export function onEvent({
+export function onEvent<T extends 'number' | 'string'>({
     client,
     event,
-    callback
-}: IOnEvent) {
+    callback,
+    expectedType
+}: IOnEvent<T>) {
     client.on(event, (msg: Message) => {
         const { args } = msg;
-        callback(args[0]);
+
+        if (typeof args[0] !== expectedType) {
+            throw new Error(`Error in event ${event}: Expected ${expectedType} but got ${typeof args[0]}`);
+        }
+
+        if (typeof args[0] === 'string' && expectedType === 'string') {
+            return callback(args[0] as T extends 'number' ? number : string);
+        } else if (typeof args[0] === 'number' && expectedType === 'number') {
+            return callback(args[0] as T extends 'number' ? number : string);
+        }
+
+        throw new Error(`Error in event ${event}: Expected ${expectedType} but got ${typeof args[0]}`);
     });
 }

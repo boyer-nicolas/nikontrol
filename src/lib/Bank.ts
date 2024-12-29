@@ -34,6 +34,8 @@ export class Bank {
             const track = new Track({ id, client });
             this.tracks.push(track);
         }
+
+        console.log(`➡️ Bank created with ${this.tracksCount} tracks`);
     }
 
     /**
@@ -48,6 +50,8 @@ export class Bank {
         this.tracks.forEach((track) => {
             track.listen();
         });
+
+        console.log('✅ All tracks in bank listening for events from DAW');
     }
 
     public sendTrackCount() {
