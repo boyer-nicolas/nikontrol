@@ -106,7 +106,7 @@ export class Transport {
      * @param {boolean} value - `true` to turn the metronome on, `false` to turn it off.
      * @memberof Transport
      */
-    public sendMetronome(value: boolean) {
+    public setDawMetronome(value: boolean) {
         this.client.send(new OSC.Message(DAWEvents.Metronome, boolToNum(value)));
         signalLog(DAWSignals.TransportMetronome, boolToNum(value));
     }
