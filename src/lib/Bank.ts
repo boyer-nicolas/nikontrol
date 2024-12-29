@@ -1,4 +1,5 @@
 import { DAWEvents } from '@/lib/events';
+import { signalLog } from '@/lib/logger';
 import { Track } from '@/lib/Track';
 import OSC from 'osc-js';
 
@@ -54,8 +55,14 @@ export class Bank {
         console.log('✅ All tracks in bank listening for events from DAW');
     }
 
+    /**
+     * Send a message to the DAW to report the number of tracks in the bank.
+     *
+     * @memberof Bank
+     */
     public sendTrackCount() {
         this.client.send(new OSC.Message(DAWEvents.TrackCount, this.tracksCount));
+        signalLog(`TRACK_COUNT_${this.tracksCount}`);
     }
 
 
@@ -75,6 +82,7 @@ export class Bank {
      */
     public next() {
         this.client.send(new OSC.Message(DAWEvents.TrackBankNext));
+        signalLog('NEXT_BANK');
     }
 
     /**
@@ -84,6 +92,7 @@ export class Bank {
      */
     public prev() {
         this.client.send(new OSC.Message(DAWEvents.TrackBankPrev));
+        signalLog('PREVIOUS_BANK');
     }
 
     /**
@@ -94,7 +103,8 @@ export class Bank {
      * @memberof Bank
      */
     public select(bank: number) {
-        this.client.send(new OSC.Message(DAWEvents.TrackBankSelect, bank));
         this.activeBank = bank;
+        this.client.send(new OSC.Message(DAWEvents.TrackBankSelect, bank));
+        signalLog(`SELECT_BANK_${bank}`);
     }
 }

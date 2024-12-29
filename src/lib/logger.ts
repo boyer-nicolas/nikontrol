@@ -4,5 +4,5 @@
  * @param {string} signal The signal being sent.
  */
 export function signalLog(signal: string) {
-    console.log(`➡️ Sent signal: ${signal} to DAW`);
+    console.log(`➡️ Sent signal: "${signal}" to DAW`);
 }

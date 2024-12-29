@@ -6,7 +6,7 @@ import OSC from 'osc-js'
 
 const client = new OSC({ plugin: new OSC.DatagramPlugin() });
 
-console.log('🚀 Starting OSC Server');
+console.log('➡️ OSC Client created');
 
 const bank = new Bank({
     tracksCount: CONFIG.TRACK_COUNT,
@@ -16,13 +16,13 @@ const bank = new Bank({
 const transport = new Transport(client);
 
 client.on('open', () => {
-    console.log('✅ OSC Server connected');
+    console.log('✅', 'OSC Client connected');
     bank.listen();
     transport.listen();
 });
 
 client.on('error', (err: unknown) => {
-    console.error(err);
+    console.error('❌', err);
 });
 
 client.open({

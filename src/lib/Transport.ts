@@ -6,11 +6,10 @@ export class Transport {
     public client: OSC;
     public recording: boolean = false;
     public playing: boolean = false;
-    public loop: boolean = false;
     public paused: boolean = false;
     public stopped: boolean = true;
-    public metronomeOn: boolean = false;
-    public loopOn: boolean = false;
+    public metronome: boolean = false;
+    public repeat: boolean = false;
 
     /**
      * Construct a Transport object with the given OSC client.
@@ -81,12 +80,12 @@ export class Transport {
             expectedType: 'number'
         });
 
-        // On Loop
+        // On Repeat
         onEvent({
             client: this.client,
-            event: DAWEvents.Loop,
+            event: DAWEvents.Repeat,
             callback: (value) => {
-                this.setLoopOn(value === 1);
+                this.setRepeatOn(value === 1);
             },
             expectedType: 'number'
         });
@@ -102,18 +101,18 @@ export class Transport {
      */
     public sendMetronome(value: boolean) {
         this.client.send(new OSC.Message(DAWEvents.Metronome, value ? 1 : 0));
-        signalLog(value ? '🎵 Metronome on' : '🎵 Metronome off');
+        signalLog(value ? 'METRONOME_ON' : 'METRONOME_OFF');
     }
 
     /**
-     * Sends a message to the DAW to turn loop on or off.
+     * Sends a message to the DAW to turn repeat on or off.
      *
-     * @param {boolean} value - `true` to turn loop on, `false` to turn loop off.
+     * @param {boolean} value - `true` to turn repeat on, `false` to turn repeat off.
      * @memberof Transport
      */
-    public sendLoop(value: boolean) {
-        this.client.send(new OSC.Message(DAWEvents.Loop, value ? 1 : 0));
-        signalLog(value ? '🔁 Loop on' : '🔁 Loop off');
+    public setDawRepeat(value: boolean) {
+        this.client.send(new OSC.Message(DAWEvents.Repeat, value ? 1 : 0));
+        signalLog(value ? 'REPEAT_ON' : 'REPEAT_OFF');
     }
 
     /**
@@ -121,9 +120,9 @@ export class Transport {
      *
      * @memberof Transport
      */
-    public play() {
+    public setDawPlaying() {
         this.client.send(new OSC.Message(DAWEvents.Play, 1));
-        signalLog('▶️  Play');
+        signalLog('TRANSPORT_PLAY');
     }
 
     /**
@@ -131,9 +130,9 @@ export class Transport {
      *
      * @memberof Transport
      */
-    public stop() {
+    public setDawStopped() {
         this.client.send(new OSC.Message(DAWEvents.Stop, 1));
-        signalLog('⏹️  Stop');
+        signalLog('TRANSPORT_STOP');
     }
 
     /**
@@ -141,9 +140,9 @@ export class Transport {
      *
      * @memberof Transport
      */
-    public record() {
+    public setDawRecording() {
         this.client.send(new OSC.Message(DAWEvents.Record, 1));
-        signalLog('⏺️  Record');
+        signalLog('TRANSPORT_RECORD');
     }
 
     /**
@@ -151,9 +150,9 @@ export class Transport {
      *
      * @memberof Transport
      */
-    public pause() {
+    public setDawPaused() {
         this.client.send(new OSC.Message(DAWEvents.Pause, 1));
-        signalLog('⏸️  Pause');
+        signalLog('TRANSPORT_PAUSE');
     }
 
     /**
@@ -174,19 +173,19 @@ export class Transport {
      * @memberof Transport
      */
     public setMetronomeOn(value: boolean) {
-        this.metronomeOn = value;
+        this.metronome = value;
         console.log('🎵 Metronome', value);
     }
 
     /**
-     * Set the transport loop state.
+     * Set the transport repeat state.
      *
-     * @param {boolean} value - `true` to turn loop on, `false` to turn loop off.
+     * @param {boolean} value - `true` to turn repeat on, `false` to turn repeat off.
      * @memberof Transport
      */
-    public setLoopOn(value: boolean) {
-        this.loopOn = value;
-        console.log('🔁 Loop', value);
+    public setRepeatOn(value: boolean) {
+        this.repeat = value;
+        console.log('🔁 Repeat', value);
     }
 
     /**
