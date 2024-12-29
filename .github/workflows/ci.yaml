@@ -1,0 +1,28 @@
+on:
+  push:
+
+env:
+  CI: true
+
+name: CI
+jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install
+      - run: bun run lint
+      - run: bun run check
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install
+      - run: bun run build
