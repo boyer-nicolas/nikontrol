@@ -18,6 +18,19 @@ export enum DAWEvents {
     Repeat = '/repeat',
 }
 
+export enum DAWSignals {
+    TransportRecord = 'TRANSPORT_RECORD',
+    TransportPlay = 'TANSPORT_PLAY',
+    TransportPause = 'TRANSPORT_PAUSE',
+    TransportStop = 'TRANSPORT_STOP',
+    TransportMetronome = 'METRONOME',
+    TransportRepeat = 'REPEAT',
+    TracksCount = 'TRACKS_COUNT',
+    BankNext = 'BANK_NEXT',
+    BankPrev = 'BANK_PREV',
+    BankSelect = 'BANK_SELECT',
+}
+
 export function DAWEndpoint(endpoint: DAWEvents, id?: number) {
     if (endpoint.includes(':id') && id) {
         return endpoint.replace(':id', id.toString());

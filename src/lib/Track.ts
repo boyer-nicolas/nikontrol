@@ -146,7 +146,7 @@ export class Track {
      */
     public setDawVolumeLevel(level: number) {
         this.client.send(new OSC.Message(DAWEndpoint(DAWEvents.TrackVolume, this.id), level));
-        signalLog(`TRACK_${this.id}_VOLUME_${level}`);
+        signalLog(`TRACK_${this.id}_VOLUME`, level);
     }
 
     /**
@@ -170,9 +170,9 @@ export class Track {
         return this.pan;
     }
 
-    public setDawPan(pan: number) {
-        this.client.send(new OSC.Message(DAWEndpoint(DAWEvents.TrackPan, this.id), pan));
-        signalLog(`TRACK_${this.id}_PAN_${pan}`);
+    public setDawPan(level: number) {
+        this.client.send(new OSC.Message(DAWEndpoint(DAWEvents.TrackPan, this.id), level));
+        signalLog(`TRACK_${this.id}_PAN`, level);
     }
 
     /**

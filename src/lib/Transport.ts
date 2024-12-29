@@ -1,5 +1,6 @@
-import { DAWEvents, onEvent } from '@/lib/events';
+import { DAWEvents, DAWSignals, onEvent } from '@/lib/events';
 import { signalLog } from '@/lib/logger';
+import { boolToNum } from '@/lib/utils';
 import OSC from 'osc-js';
 
 export class Transport {
@@ -100,8 +101,8 @@ export class Transport {
      * @memberof Transport
      */
     public sendMetronome(value: boolean) {
-        this.client.send(new OSC.Message(DAWEvents.Metronome, value ? 1 : 0));
-        signalLog(value ? 'METRONOME_ON' : 'METRONOME_OFF');
+        this.client.send(new OSC.Message(DAWEvents.Metronome, boolToNum(value)));
+        signalLog(DAWSignals.TransportMetronome, boolToNum(value));
     }
 
     /**
@@ -111,8 +112,8 @@ export class Transport {
      * @memberof Transport
      */
     public setDawRepeat(value: boolean) {
-        this.client.send(new OSC.Message(DAWEvents.Repeat, value ? 1 : 0));
-        signalLog(value ? 'REPEAT_ON' : 'REPEAT_OFF');
+        this.client.send(new OSC.Message(DAWEvents.Repeat, boolToNum(value)));
+        signalLog(DAWSignals.TransportRepeat, boolToNum(value));
     }
 
     /**
@@ -121,8 +122,9 @@ export class Transport {
      * @memberof Transport
      */
     public setDawPlaying() {
-        this.client.send(new OSC.Message(DAWEvents.Play, 1));
-        signalLog('TRANSPORT_PLAY');
+        this.setPlaying(true);
+        this.client.send(new OSC.Message(DAWEvents.Play, boolToNum(this.playing)));
+        signalLog(DAWSignals.TransportPlay, boolToNum(this.playing));
     }
 
     /**
@@ -131,8 +133,9 @@ export class Transport {
      * @memberof Transport
      */
     public setDawStopped() {
-        this.client.send(new OSC.Message(DAWEvents.Stop, 1));
-        signalLog('TRANSPORT_STOP');
+        this.setStopped(true);
+        this.client.send(new OSC.Message(DAWEvents.Stop, boolToNum(this.stopped)));
+        signalLog(DAWSignals.TransportStop, boolToNum(this.stopped));
     }
 
     /**
@@ -141,8 +144,9 @@ export class Transport {
      * @memberof Transport
      */
     public setDawRecording() {
-        this.client.send(new OSC.Message(DAWEvents.Record, 1));
-        signalLog('TRANSPORT_RECORD');
+        this.setRecording(true);
+        this.client.send(new OSC.Message(DAWEvents.Record, boolToNum(this.recording)));
+        signalLog(DAWSignals.TransportRecord, boolToNum(this.recording));
     }
 
     /**
@@ -151,8 +155,9 @@ export class Transport {
      * @memberof Transport
      */
     public setDawPaused() {
-        this.client.send(new OSC.Message(DAWEvents.Pause, 1));
-        signalLog('TRANSPORT_PAUSE');
+        this.setPaused(true);
+        this.client.send(new OSC.Message(DAWEvents.Pause, boolToNum(this.paused)));
+        signalLog(DAWSignals.TransportPause, boolToNum(this.paused));
     }
 
     /**
