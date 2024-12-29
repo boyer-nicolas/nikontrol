@@ -1,35 +1,19 @@
 // import * as readline from 'readline';
-import { selectTrackBank } from '@/lib/banks';
+import { Bank } from '@/lib/Bank';
 import { CONFIG } from '@/lib/config';
-import { Message, REAPER_EVENTS } from '@/lib/events';
-import { handleTrackPan } from '@/lib/pan';
-import { sendTrackCount } from '@/lib/tracks';
-import { handleTrackVolume } from '@/lib/volume';
-import { handleTrackVu } from '@/lib/vu';
 import OSC from 'osc-js'
 
 const client = new OSC({ plugin: new OSC.DatagramPlugin() });
 
+const bank = new Bank({
+    tracksCount: CONFIG.TRACK_COUNT,
+    client
+})
+
 client.on('open', () => {
     console.log('OSC Server connected');
-    sendTrackCount(client);
-    selectTrackBank(client, 0);
+    bank.listen();
 });
-
-for (let track = 0; track < CONFIG.TRACK_COUNT; track++) {
-    client.on(REAPER_EVENTS.TRACK_VOLUME(track), (msg: Message) => {
-        handleTrackVolume(msg, track)
-    });
-    client.on(REAPER_EVENTS.TRACK_VU_METER(track), (msg: Message) => {
-        handleTrackVu(msg, track)
-    });
-    client.on(REAPER_EVENTS.TRACK_PAN(track), (msg: Message) => {
-        handleTrackPan(msg, track)
-    });
-    client.on(REAPER_EVENTS.TRACK_NAME(track), (msg: Message) => {
-        console.log(`Track ${track} Name:`, msg.args[0]);
-    });
-}
 
 client.on('error', (err: unknown) => {
     console.error(err);
