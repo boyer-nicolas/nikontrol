@@ -41,17 +41,6 @@ export class Server {
     }
 
     /**
-     * Get the status of the server.
-     *
-     * Returns a boolean indicating whether the OSC server is connected to the DAW.
-     *
-     * @returns {boolean} - `true` if connected, `false` otherwise.
-     */
-    public started(): boolean {
-        return this.dawInterface.started;
-    }
-
-    /**
      * Starts the OSC server.
      *
      * Opens the OSC client to start communicating with the DAW.

@@ -53,6 +53,10 @@ export class Transport {
             event: DAWEvents.Play,
             callback: (value) => {
                 this.setPlaying(value === 1);
+
+                setTimeout(() => {
+                    this.setDawStopped();
+                }, 2000);
             },
             expectedType: 'number'
         });

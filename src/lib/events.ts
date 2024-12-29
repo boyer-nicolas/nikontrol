@@ -13,7 +13,7 @@ export enum DAWEvents {
     Metronome = '/click',
     Record = '/record',
     Stop = '/stop',
-    Play = 't/play',
+    Play = '/play',
     Pause = '/pause',
     Repeat = '/repeat',
 }
@@ -31,6 +31,15 @@ export enum DAWSignals {
     BankSelect = 'BANK_SELECT',
 }
 
+/**
+ * Returns a DAW endpoint string with the track ID replaced by the provided number,
+ * if the endpoint string contains the string ":id".
+ *
+ * @param {DAWEvents} endpoint - The DAW endpoint string.
+ * @param {number} id - The track ID to replace the ":id" string with.
+ * @returns {string} - The endpoint string with the track ID replaced, or the original string if the endpoint did not contain ":id".
+ * @throws {Error} - If the endpoint contains ":id" but the track ID is not provided.
+ */
 export function DAWEndpoint(endpoint: DAWEvents, id?: number) {
     if (endpoint.includes(':id') && id) {
         return endpoint.replace(':id', id.toString());

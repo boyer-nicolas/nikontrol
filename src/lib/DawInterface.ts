@@ -10,7 +10,9 @@ export class DawInterface {
      * Creates a new OSC client and sets up an error handler.
      */
     constructor() {
-        this.client = new OSC({ plugin: new OSC.DatagramPlugin() });
+        this.client = new OSC({
+            plugin: new OSC.DatagramPlugin(),
+        })
 
         this.client.on('error', (err: unknown) => {
             console.error('❌', err);
@@ -28,8 +30,13 @@ export class DawInterface {
         return this.client;
     }
 
-    public checkConnection(): boolean {
-        return this.started;
+    /**
+     * Gets the status of the OSC client.
+     *
+     * @returns {object} - The status of the OSC client, with properties `isOpen`, `isListening`, and `isSending`.
+     */
+    public connected(): boolean {
+        return this.client.status() === 1
     }
 
     /**
@@ -40,6 +47,7 @@ export class DawInterface {
     open(): void {
         this.client.open({
             port: 9000,
+            hostname: '0.0.0.0',
         });
     }
 

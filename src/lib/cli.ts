@@ -54,17 +54,17 @@ export class CLI {
     private async checkServer(): Promise<void> {
         let timeout = 5000;
 
-        if (!this.server.started() && timeout > 0) {
+        if (!this.dawInterface.connected() && timeout > 0) {
             console.log('Waiting for DAW connection...');
         }
 
-        while (!this.server.started() && timeout > 0) {
+        while (!this.dawInterface.connected() && timeout > 0) {
             process.stdout.write('.');
             timeout -= 100
             await delay(100)
         }
 
-        if (!this.server.started()) {
+        if (!this.dawInterface.connected()) {
             console.log()
             console.error('❌ DAW connection failed');
             process.exit(1);
@@ -87,6 +87,16 @@ export class CLI {
             console.error(error);
             process.exit(1);
         }
+
+        program.command("server")
+            .description("Start the server")
+            .action(() => {
+                if (!this.dawInterface.started) {
+                    console.error('❌ DAW connection failed');
+                }
+
+                console.log('✅ Server started');
+            });
 
         program
             .command("record")
