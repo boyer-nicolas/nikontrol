@@ -12,8 +12,17 @@ export class Bank {
     private tracks: Track[] = [];
     private client: OSC
 
-    public defaultBank: number = 0
+    public defaultBank: number = 0;
+    public activeBank: number = this.defaultBank;
 
+    /**
+     * Constructs a Bank object with the given number of tracks and OSC client.
+     *
+     * @param {Object} opts - An object with the following properties:
+     *   tracksCount {number} - The number of tracks in the bank.
+     *   client {OSC} - The OSC client to use for communicating with the DAW.
+     * @memberof Bank
+     */
     constructor({
         tracksCount,
         client
@@ -82,5 +91,6 @@ export class Bank {
      */
     public select(bank: number) {
         this.client.send(new OSC.Message(DAWEvents.TrackBankSelect, bank));
+        this.activeBank = bank;
     }
 }

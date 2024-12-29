@@ -5,6 +5,7 @@ export enum DAWEvents {
     TrackPan = `/track/:id/pan`,
     TrackVuMeter = `/track/:id/vu`,
     TrackName = `/track/:id/name`,
+    TrackMute = `/track/:id/mute`,
     TrackCount = '/device/track/count',
     TrackBankSelect = '/device/track/bank/select',
     TrackBankPrev = '/device/track/bank/-',

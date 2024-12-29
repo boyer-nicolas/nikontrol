@@ -30,7 +30,7 @@ export class Track {
     public vuMeter: number = this.defaultVuMeter; // -inf
 
     // Modifiers
-    publicmuted: boolean = false;
+    public muted: boolean = false;
 
     /**
      * Constructs a Track object with the given client and id.
@@ -113,6 +113,21 @@ export class Track {
                 }
 
                 this.setName(value);
+            }
+        });
+
+        // Mute
+        onEvent({
+            client: this.client,
+            event: DAWEndpoint(DAWEvents.TrackMute, this.id),
+
+            callback: (value) => {
+                if (typeof value !== 'number') {
+                    throw new Error(`Track ${this.id} VU Meter is not a number`);
+                }
+
+                // Value is 1 or 0
+                this.setMuted(value === 1);
             }
         });
 
@@ -201,5 +216,20 @@ export class Track {
      */
     getName(): string {
         return this.name;
+    }
+
+    setMuted(muted: boolean): void {
+        console.log(`Track ${this.id} Muted:`, muted);
+        this.muted = muted;
+    }
+
+    /**
+     * Returns whether the track is muted.
+     *
+     * @returns {boolean} - Whether the track is muted.
+     * @memberof Track
+     */
+    isMuted(): boolean {
+        return this.muted;
     }
 }
