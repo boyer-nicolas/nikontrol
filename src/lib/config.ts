@@ -1,3 +1,4 @@
-export const CONFIG = {
-    TRACK_COUNT: 8
+export const Config = {
+    TracksCount: 8,
+    ProgramName: 'NIKONTROL'
 }

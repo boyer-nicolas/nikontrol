@@ -1,6 +1,6 @@
 import { DAWEvents, DAWSignals } from '@/lib/events';
 import { signalLog } from '@/lib/logger';
-import { Track } from '@/lib/Track';
+import { Track } from '@/controller/Track';
 import OSC from 'osc-js';
 
 interface IBank {

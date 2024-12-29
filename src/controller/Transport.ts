@@ -3,6 +3,10 @@ import { signalLog } from '@/lib/logger';
 import { boolToNum } from '@/lib/utils';
 import OSC from 'osc-js';
 
+interface ITransport {
+    client: OSC
+}
+
 export class Transport {
     public client: OSC;
     public recording: boolean = false;
@@ -17,7 +21,9 @@ export class Transport {
      *
      * @param {OSC} client - The OSC client to use for communicating with the DAW.
      */
-    constructor(client: OSC) {
+    constructor({
+        client
+    }: ITransport) {
         this.client = client;
     }
 

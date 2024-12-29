@@ -1,49 +1,31 @@
-// import * as readline from 'readline';
-import { Bank } from '@/lib/Bank';
-import { CONFIG } from '@/lib/config';
-import { Transport } from '@/lib/Transport';
-import OSC from 'osc-js'
+import { Bank } from '@/controller/Bank';
+import { Transport } from '@/controller/Transport';
+import { Config } from '@/lib/config';
+import { DawInterface } from '@/lib/DawInterface';
 
-const client = new OSC({ plugin: new OSC.DatagramPlugin() });
-
-console.log('➡️ OSC Client created');
+const dawInterface = new DawInterface()
 
 const bank = new Bank({
-    tracksCount: CONFIG.TRACK_COUNT,
-    client
+    tracksCount: Config.TracksCount,
+    client: dawInterface.getClient(),
 })
 
-const transport = new Transport(client);
+const transport = new Transport({
+    client: dawInterface.getClient(),
+});
 
-client.on('open', () => {
-    console.log('✅', 'OSC Client connected');
-    bank.listen();
+dawInterface.start();
+dawInterface.onOpen(() => {
     transport.listen();
+    bank.listen();
 });
-
-client.on('error', (err: unknown) => {
-    console.error('❌', err);
-});
-
-client.open({
-    port: 9000,
-});
-
-
-/**
- * Log a message and exit the process with status 0.
- */
-export function handleExit() {
-    client.close();
-    console.log('Bye bye!');
-    process.exit(0);
-}
-
 
 process.on('SIGTERM', () => {
-    handleExit()
+    console.log('Bye bye!');
+    process.exit(0);
 });
 
 process.on('SIGINT', () => {
-    handleExit()
+    console.log('Bye bye!');
+    process.exit(0);
 });
