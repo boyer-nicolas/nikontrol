@@ -33,7 +33,7 @@ export class DawInterface {
      *
      * Opens the OSC client on port 9000. The client must be stopped before it can be started again.
      */
-    start(): void {
+    open(): void {
         this.client.open({
             port: 9000,
         });
