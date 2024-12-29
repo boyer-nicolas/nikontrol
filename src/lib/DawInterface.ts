@@ -28,6 +28,10 @@ export class DawInterface {
         return this.client;
     }
 
+    public checkConnection(): boolean {
+        return this.started;
+    }
+
     /**
      * Starts the OSC client.
      *
@@ -37,7 +41,6 @@ export class DawInterface {
         this.client.open({
             port: 9000,
         });
-        this.started = true;
     }
 
     /**
@@ -49,6 +52,7 @@ export class DawInterface {
     onOpen(callback: () => void): void {
         this.client.on('open', () => {
             console.log('✅', 'OSC Client connected');
+            this.started = true;
             callback();
         });
     }

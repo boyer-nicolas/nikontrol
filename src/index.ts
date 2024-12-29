@@ -1,5 +1,8 @@
 
-import { CLI } from '@/lib/cli';
+import { CLI } from '@/lib/CLI';
 
-const cli = new CLI()
-cli.registerCommands()
+async function main() {
+    await new CLI().registerCommands()
+}
+
+main()

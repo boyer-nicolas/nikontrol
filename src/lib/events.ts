@@ -13,7 +13,7 @@ export enum DAWEvents {
     Metronome = '/click',
     Record = '/record',
     Stop = '/stop',
-    Play = '/play',
+    Play = 't/play',
     Pause = '/pause',
     Repeat = '/repeat',
 }

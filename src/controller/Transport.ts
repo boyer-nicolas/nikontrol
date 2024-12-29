@@ -108,7 +108,7 @@ export class Transport {
      */
     public setDawMetronome(value: boolean) {
         this.client.send(new OSC.Message(DAWEvents.Metronome, boolToNum(value)));
-        signalLog(DAWSignals.TransportMetronome, boolToNum(value));
+        signalLog(DAWSignals.TransportMetronome, boolToNum(value), DAWEvents.Metronome);
     }
 
     /**
@@ -119,7 +119,7 @@ export class Transport {
      */
     public setDawRepeat(value: boolean) {
         this.client.send(new OSC.Message(DAWEvents.Repeat, boolToNum(value)));
-        signalLog(DAWSignals.TransportRepeat, boolToNum(value));
+        signalLog(DAWSignals.TransportRepeat, boolToNum(value), DAWEvents.Repeat);
     }
 
     /**
@@ -128,9 +128,8 @@ export class Transport {
      * @memberof Transport
      */
     public setDawPlaying() {
-        this.setPlaying(true);
-        this.client.send(new OSC.Message(DAWEvents.Play, boolToNum(this.playing)));
-        signalLog(DAWSignals.TransportPlay, boolToNum(this.playing));
+        this.client.send(new OSC.Message(DAWEvents.Play, boolToNum(true)));
+        signalLog(DAWSignals.TransportPlay, boolToNum(true), DAWEvents.Play);
     }
 
     /**
@@ -139,9 +138,8 @@ export class Transport {
      * @memberof Transport
      */
     public setDawStopped() {
-        this.setStopped(true);
-        this.client.send(new OSC.Message(DAWEvents.Stop, boolToNum(this.stopped)));
-        signalLog(DAWSignals.TransportStop, boolToNum(this.stopped));
+        this.client.send(new OSC.Message(DAWEvents.Stop, boolToNum(true)));
+        signalLog(DAWSignals.TransportStop, boolToNum(true), DAWEvents.Stop);
     }
 
     /**
@@ -150,9 +148,8 @@ export class Transport {
      * @memberof Transport
      */
     public setDawRecording() {
-        this.setRecording(true);
-        this.client.send(new OSC.Message(DAWEvents.Record, boolToNum(this.recording)));
-        signalLog(DAWSignals.TransportRecord, boolToNum(this.recording));
+        this.client.send(new OSC.Message(DAWEvents.Record, boolToNum(true)));
+        signalLog(DAWSignals.TransportRecord, boolToNum(true), DAWEvents.Record);
     }
 
     /**
@@ -161,9 +158,8 @@ export class Transport {
      * @memberof Transport
      */
     public setDawPaused() {
-        this.setPaused(true);
-        this.client.send(new OSC.Message(DAWEvents.Pause, boolToNum(this.paused)));
-        signalLog(DAWSignals.TransportPause, boolToNum(this.paused));
+        this.client.send(new OSC.Message(DAWEvents.Pause, boolToNum(true)));
+        signalLog(DAWSignals.TransportPause, boolToNum(true), DAWEvents.Pause);
     }
 
     /**

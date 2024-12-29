@@ -3,59 +3,73 @@ import { Transport } from '@/controller/Transport';
 import { Config } from '@/lib/config';
 import { DawInterface } from '@/lib/DawInterface';
 
-/**
- * Initializes the server.
- *
- * Starts the OSC server and sets up the connection with the DAW.
- *
- * The server is configured to exit when the process receives a SIGTERM or SIGINT
- * signal. When the server exits, the DAW connection is closed.
- *
- * @returns {void}
- */
-export function server() {
-    // Init the DAW Interface
-    const dawInterface = new DawInterface()
+export class Server {
+    public dawInterface: DawInterface
+    public bank: Bank
+    public transport: Transport
 
-    // Create the Bank and the Tracks
-    const bank = new Bank({
-        tracksCount: Config.TracksCount,
-        client: dawInterface.getClient(),
-    })
+    /**
+     * Construct a new Server object.
+     *
+     * Creates a new DAWInterface object, a new Bank object with the number of tracks specified in the configuration,
+     * and a new Transport object.
+     *
+     * When the DAW connection is established, the callbacks for the Transport and the Bank are called.
+     *
+     * Listens for SIGTERM and SIGINT events to close the DAW connection and exit.
+     */
+    constructor() {
+        // Init the DAW Interface
+        this.dawInterface = new DawInterface()
 
-    // Create the Transport
-    const transport = new Transport({
-        client: dawInterface.getClient(),
-    });
+        // Create the Bank and the Tracks
+        this.bank = new Bank({
+            tracksCount: Config.TracksCount,
+            client: this.dawInterface.getClient(),
+        })
 
-    // Configure the callback when the DAW connection is established
-    dawInterface.onOpen(() => {
-        transport.listen();
-        bank.listen();
-    });
+        // Create the Transport
+        this.transport = new Transport({
+            client: this.dawInterface.getClient(),
+        });
 
-    process.on('SIGTERM', () => {
-        console.log('Bye bye!');
-        if (dawInterface.started) {
-            dawInterface.close()
-        }
-        process.exit(0);
-    });
-
-    process.on('SIGINT', () => {
-        console.log('Bye bye!');
-        if (dawInterface.started) {
-            dawInterface.close()
-        }
-        process.exit(0);
-    });
-
-    dawInterface.open();
-
-    return {
-        dawInterface,
-        bank,
-        transport
+        // Configure the callback when the DAW connection is established
+        this.dawInterface.onOpen(() => {
+            this.transport.listen();
+            this.bank.listen();
+        });
     }
 
+    /**
+     * Get the status of the server.
+     *
+     * Returns a boolean indicating whether the OSC server is connected to the DAW.
+     *
+     * @returns {boolean} - `true` if connected, `false` otherwise.
+     */
+    public started(): boolean {
+        return this.dawInterface.started;
+    }
+
+    /**
+     * Starts the OSC server.
+     *
+     * Opens the OSC client to start communicating with the DAW.
+     *
+     * @returns {void}
+     */
+    public start(): void {
+        this.dawInterface.open();
+    }
+
+    /**
+     * Stops the OSC server.
+     *
+     * Closes the OSC client to stop communicating with the DAW.
+     *
+     * @returns {void}
+     */
+    public stop(): void {
+        this.dawInterface.close()
+    }
 }
