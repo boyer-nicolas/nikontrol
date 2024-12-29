@@ -9,6 +9,8 @@ export class Transport {
     public loop: boolean = false;
     public paused: boolean = false;
     public stopped: boolean = true;
+    public metronomeOn: boolean = false;
+    public loopOn: boolean = false;
 
     /**
      * Construct a Transport object with the given OSC client.
@@ -69,7 +71,49 @@ export class Transport {
             expectedType: 'number'
         });
 
+        // On Metronome
+        onEvent({
+            client: this.client,
+            event: DAWEvents.Metronome,
+            callback: (value) => {
+                this.setMetronomeOn(value === 1);
+            },
+            expectedType: 'number'
+        });
+
+        // On Loop
+        onEvent({
+            client: this.client,
+            event: DAWEvents.Loop,
+            callback: (value) => {
+                this.setLoopOn(value === 1);
+            },
+            expectedType: 'number'
+        });
+
         console.log('✅ Transport listening for events from DAW');
+    }
+
+    /**
+     * Sends a message to the DAW to turn the metronome on or off.
+     *
+     * @param {boolean} value - `true` to turn the metronome on, `false` to turn it off.
+     * @memberof Transport
+     */
+    public sendMetronome(value: boolean) {
+        this.client.send(new OSC.Message(DAWEvents.Metronome, value ? 1 : 0));
+        signalLog(value ? '🎵 Metronome on' : '🎵 Metronome off');
+    }
+
+    /**
+     * Sends a message to the DAW to turn loop on or off.
+     *
+     * @param {boolean} value - `true` to turn loop on, `false` to turn loop off.
+     * @memberof Transport
+     */
+    public sendLoop(value: boolean) {
+        this.client.send(new OSC.Message(DAWEvents.Loop, value ? 1 : 0));
+        signalLog(value ? '🔁 Loop on' : '🔁 Loop off');
     }
 
     /**
@@ -121,6 +165,28 @@ export class Transport {
     public setPlaying(value: boolean) {
         this.playing = value;
         console.log('▶️  Transport playing', value);
+    }
+
+    /**
+     * Set the metronome on or off.
+     *
+     * @param {boolean} value - `true` to turn the metronome on, `false` to turn it off.
+     * @memberof Transport
+     */
+    public setMetronomeOn(value: boolean) {
+        this.metronomeOn = value;
+        console.log('🎵 Metronome', value);
+    }
+
+    /**
+     * Set the transport loop state.
+     *
+     * @param {boolean} value - `true` to turn loop on, `false` to turn loop off.
+     * @memberof Transport
+     */
+    public setLoopOn(value: boolean) {
+        this.loopOn = value;
+        console.log('🔁 Loop', value);
     }
 
     /**

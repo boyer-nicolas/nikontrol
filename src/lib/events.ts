@@ -15,6 +15,7 @@ export enum DAWEvents {
     Stop = '/stop',
     Play = '/play',
     Pause = '/pause',
+    Loop = '/repeat',
 }
 
 export function DAWEndpoint(endpoint: DAWEvents, id?: number) {
