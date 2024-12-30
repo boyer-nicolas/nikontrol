@@ -33,6 +33,7 @@ export class Track {
     public muted: boolean = false;
     public soloed: boolean = false;
     public recArmed: boolean = false;
+    public monitor: 'ON' | 'AUTO' | 'OFF' = 'OFF';
 
     /**
      * Constructs a Track object with the given client and id.
@@ -84,6 +85,9 @@ export class Track {
 
         // RecArm
         DAW.Track(this.id).onRecArm(this.client, (value) => this.setRecArmed(value))
+
+        // Monitor
+        DAW.Track(this.id).onMonitor(this.client, (value) => this.setMonitored(value))
 
         console.log(`✅ Track ${this.id} listening for events from DAW...`);
     }
@@ -270,6 +274,46 @@ export class Track {
      */
     public setDawRecArm(recArmed: boolean) {
         DAW.Track(this.id).setRecArm(this.client, recArmed);
+    }
+
+    /**
+     * Sets whether the track is monitored.
+     *
+     * @param {boolean} monitored - Whether the track is monitored.
+     * @memberof Track
+     */
+    private setMonitored(monitored: number): void {
+        function getMonitredValue() {
+            if (monitored === 1) {
+                return 'ON';
+            } else if (monitored === 2) {
+                return 'AUTO'
+            }
+
+            return 'OFF';
+        }
+        console.log(`Track ${this.id} Monitored:`, getMonitredValue());
+        this.monitor = getMonitredValue();
+    }
+
+    /**
+     * Returns whether the track is monitored.
+     *
+     * @returns {boolean} - Whether the track is monitored.
+     * @memberof Track
+     */
+    public getMonitoring(): 'ON' | 'AUTO' | 'OFF' {
+        return this.monitor;
+    }
+
+    /**
+     * Sends a message to the DAW to monitor or unmonitor the track.
+     *
+     * @param {boolean} monitored - Whether the track is monitored.
+     * @memberof Track
+     */
+    public setDawMonitor(monitor: number) {
+        DAW.Track(this.id).setMonitor(this.client, monitor);
     }
 
 }
