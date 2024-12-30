@@ -5,7 +5,8 @@
 		"lint": "eslint ./src/** ",
 		"lint:fix": "eslint ./src/** --fix",
 		"check": "tsc --project tsconfig.json --noEmit",
-		"build": "bun build --sourcemap --target bun ./src/index.ts --outfile ./dist/index.js"
+		"build": "bun build --sourcemap --target bun ./src/index.ts --outfile ./dist/index.js",
+		"build:bin": "bun build --compile --target bun ./src/index.ts --outfile ./dist/nikontrol"
 	},
 	"version": "1.0.0",
 	"main": "./dist/index.js",

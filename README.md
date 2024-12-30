@@ -1,4 +1,6 @@
-# OSC Controller
+# Nikontrol
+
+A universal DAW controller interface.
 
 ## Getting Started
 
@@ -55,3 +57,7 @@ Commands:
 ## Hardware Required
 
 Coming soon (haven't received it yet)
+
+## Credits
+
+Special thanks to [adzialocha/osc-js](https://github.com/adzialocha/osc-js)
