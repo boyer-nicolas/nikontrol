@@ -1,5 +1,4 @@
-import { DAWEndpoint, onEvent, DAWEvents } from '@/lib/events';
-import { signalLog } from '@/lib/logger';
+import { DAW } from '@/lib/events';
 import OSC from 'osc-js';
 
 interface ITrack {
@@ -32,6 +31,8 @@ export class Track {
 
     // Modifiers
     public muted: boolean = false;
+    public soloed: boolean = false;
+    public recArmed: boolean = false;
 
     /**
      * Constructs a Track object with the given client and id.
@@ -62,57 +63,27 @@ export class Track {
      * When any of these messages are received, the corresponding property of the Track object is updated.
      */
     public listen(): void {
+
         // Volume
-        onEvent({
-            client: this.client,
-            event: DAWEndpoint(DAWEvents.TrackVolume, this.id),
-            callback: (value) => {
-                this.setVolume(value);
-            },
-            expectedType: 'number'
-        });
+        DAW.Track(this.id).onVolume(this.client, (value) => this.setVolume(value))
 
         // Pan
-        onEvent({
-            client: this.client,
-            event: DAWEndpoint(DAWEvents.TrackPan, this.id),
-            callback: (value) => {
-                this.setPan(value);
-            },
-            expectedType: 'number'
-        });
+        DAW.Track(this.id).onPan(this.client, (value) => this.setPan(value))
 
         // VU Meter
-        onEvent({
-            client: this.client,
-            event: DAWEndpoint(DAWEvents.TrackVuMeter, this.id),
-            callback: (value) => {
-                this.setVuMeter(value);
-            },
-            expectedType: 'number'
-
-        });
+        DAW.Track(this.id).onVuMeter(this.client, (value) => this.setVuMeter(value))
 
         // Name
-        onEvent({
-            client: this.client,
-            event: DAWEndpoint(DAWEvents.TrackName, this.id),
-            callback: (value) => {
-                this.setName(value);
-            },
-            expectedType: 'string'
-        });
+        DAW.Track(this.id).onName(this.client, (value) => this.setName(value))
 
         // Mute
-        onEvent({
-            client: this.client,
-            event: DAWEndpoint(DAWEvents.TrackMute, this.id),
-            callback: (value) => {
-                // Value is 1 or 0
-                this.setMuted(value === 1);
-            },
-            expectedType: 'number'
-        });
+        DAW.Track(this.id).onMute(this.client, (value) => this.setMuted(value))
+
+        // Solo
+        DAW.Track(this.id).onSolo(this.client, (value) => this.setSoloed(value))
+
+        // RecArm
+        DAW.Track(this.id).onRecArm(this.client, (value) => this.setRecArmed(value))
 
         console.log(`✅ Track ${this.id} listening for events from DAW...`);
     }
@@ -145,8 +116,7 @@ export class Track {
      * @memberof Track
      */
     public setDawVolumeLevel(level: number) {
-        this.client.send(new OSC.Message(DAWEndpoint(DAWEvents.TrackVolume, this.id), level));
-        signalLog(`TRACK_${this.id}_VOLUME`, level, DAWEvents.TrackVolume);
+        DAW.Track(this.id).setVolume(this.client, level);
     }
 
     /**
@@ -171,8 +141,7 @@ export class Track {
     }
 
     public setDawPan(level: number) {
-        this.client.send(new OSC.Message(DAWEndpoint(DAWEvents.TrackPan, this.id), level));
-        signalLog(`TRACK_${this.id}_PAN`, level, DAWEvents.TrackPan);
+        DAW.Track(this.id).setPan(this.client, level);
     }
 
     /**
@@ -230,4 +199,77 @@ export class Track {
     public isMuted(): boolean {
         return this.muted;
     }
+
+    /**
+     * Sets the mute status of the track.
+     *
+     * @param {boolean} muted - Whether the track is muted.
+     * @memberof Track
+     */
+    public setDawMute(muted: boolean) {
+        DAW.Track(this.id).setMute(this.client, muted);
+    }
+
+    /**
+     * Sets the solo status of the track.
+     *
+     * @param {boolean} soloed - Whether the track is soloed.
+     * @memberof Track
+     */
+    private setSoloed(soloed: boolean): void {
+        console.log(`Track ${this.id} Soloed:`, soloed);
+        this.soloed = soloed;
+    }
+
+    /**
+     * Returns whether the track is soloed.
+     *
+     * @returns {boolean} - Whether the track is soloed.
+     * @memberof Track
+     */
+    public isSoloed(): boolean {
+        return this.soloed;
+    }
+
+    /**
+     * Sets the solo status of the track.
+     *
+     * @param {boolean} soloed - Whether the track is soloed.
+     * @memberof Track
+     */
+    public setDawSolo(soloed: boolean) {
+        DAW.Track(this.id).setSolo(this.client, soloed);
+    }
+
+    /**
+     * Sets whether the track is armed for recording.
+     *
+     * @param {boolean} recArmed - Whether the track is armed for recording.
+     * @memberof Track
+     */
+    private setRecArmed(recArmed: boolean): void {
+        console.log(`Track ${this.id} RecArmed:`, recArmed);
+        this.recArmed = recArmed;
+    }
+
+    /**
+     * Returns whether the track is armed for recording.
+     *
+     * @returns {boolean} - Whether the track is armed for recording.
+     * @memberof Track
+     */
+    public getRecArmed(): boolean {
+        return this.recArmed;
+    }
+
+    /**
+     * Sends a message to the DAW to arm or disarm recording on the track.
+     *
+     * @param {boolean} recArmed - Whether the track is armed for recording.
+     * @memberof Track
+     */
+    public setDawRecArm(recArmed: boolean) {
+        DAW.Track(this.id).setRecArm(this.client, recArmed);
+    }
+
 }
