@@ -1,4 +1,4 @@
-import { CLI } from '@/lib/CommandLineInterface';
+import { CLI } from '@/engine/CommandLineInterface';
 
 async function main() {
     await new CLI().registerCommands()

@@ -1,8 +1,8 @@
 import { Bank } from "@/controller/Bank";
 import { Transport } from "@/controller/Transport";
 import { Config } from "@/lib/config";
-import { DawInterface } from "@/lib/DawInterface";
-import { Server } from "@/lib/Server";
+import { DawInterface } from "@/engine/DawInterface";
+import { Server } from "@/engine/Server";
 import { delay } from '@/lib/utils';
 import { program } from "commander";
 
