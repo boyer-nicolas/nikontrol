@@ -1,6 +1,6 @@
-import { signalLog } from '@/lib/logger';
-import { boolToNum } from '@/lib/utils';
-import OSC from 'osc-js'
+import { signalLog } from "@/lib/logger";
+import { boolToNum } from "@/lib/utils";
+import OSC from "osc-js";
 
 enum DAWEvents {
     TrackVolume = `/track/:id/volume`,
@@ -10,45 +10,49 @@ enum DAWEvents {
     TrackMute = `/track/:id/mute`,
     TrackSolo = `/track/:id/solo`,
     TrackRecArm = `/track/:id/recarm`,
-    TrackCount = '/device/track/count',
-    BankSelect = '/device/track/bank/select',
-    BankPrev = '/device/track/bank/-',
-    BankNext = '/device/track/bank/+',
-    Metronome = '/click',
-    Record = '/record',
-    Stop = '/stop',
-    Play = '/play',
-    Pause = '/pause',
-    Repeat = '/repeat',
+    TracksCount = "/device/track/count",
+    BankSelect = "/device/track/bank/select",
+    BankPrev = "/device/track/bank/-",
+    BankNext = "/device/track/bank/+",
+    Metronome = "/click",
+    Record = "/record",
+    Stop = "/stop",
+    Play = "/play",
+    Pause = "/pause",
+    Repeat = "/repeat",
 }
 
 enum DAWSignals {
-    TransportRecord = 'TRANSPORT_RECORD',
-    TransportPlay = 'TANSPORT_PLAY',
-    TransportPause = 'TRANSPORT_PAUSE',
-    TransportStop = 'TRANSPORT_STOP',
-    TransportMetronome = 'METRONOME',
-    TransportRepeat = 'REPEAT',
-    TracksCount = 'TRACKS_COUNT',
-    BankNext = 'BANK_NEXT',
-    BankPrev = 'BANK_PREV',
-    BankSelect = 'BANK_SELECT',
+    TransportRecord = "TRANSPORT_RECORD",
+    TransportPlay = "TANSPORT_PLAY",
+    TransportPause = "TRANSPORT_PAUSE",
+    TransportStop = "TRANSPORT_STOP",
+    TransportMetronome = "METRONOME",
+    TransportRepeat = "REPEAT",
+    TracksCount = "TRACKS_COUNT",
+    BankNext = "BANK_NEXT",
+    BankPrev = "BANK_PREV",
+    BankSelect = "BANK_SELECT",
 }
 
 type Message = {
-    offset: number,
-    address: string,
-    types: string,
-    args: number[] | string[]
-}
+    offset: number;
+    address: string;
+    types: string;
+    args: number[] | string[];
+};
 
-type MultiType<T> = T extends 'number' ? number : T extends 'string' ? string : boolean
+type MultiType<T> = T extends "number"
+    ? number
+    : T extends "string"
+    ? string
+    : boolean;
 
-interface IOnEvent<T extends 'number' | 'string' | 'boolean'> {
-    client: OSC,
-    event: string,
-    callback: (value: MultiType<T>) => void
-    expectedType?: T
+interface IOnEvent<T extends "number" | "string" | "boolean"> {
+    client: OSC;
+    event: string;
+    callback: (value: MultiType<T>) => void;
+    expectedType?: T;
 }
 
 /**
@@ -65,121 +69,162 @@ interface IOnEvent<T extends 'number' | 'string' | 'boolean'> {
  * @param {'number' | 'string'} [opts.expectedType='number'] - The type of the
  * value that is expected in the event.
  */
-function onEvent<T extends 'number' | 'string' | 'boolean'>({
+function onEvent<T extends "number" | "string" | "boolean">({
     client,
     event,
     callback,
-    expectedType
+    expectedType,
 }: IOnEvent<T>) {
     client.on(event, (msg: Message) => {
         const { args } = msg;
 
-        if (typeof args[0] === 'string' && expectedType === 'string') {
+        if (typeof args[0] === "string" && expectedType === "string") {
             return callback(args[0] as MultiType<T>);
-        } else if (typeof args[0] === 'number' && expectedType === 'number') {
+        } else if (typeof args[0] === "number" && expectedType === "number") {
             return callback(args[0] as MultiType<T>);
-        } else if (typeof args[0] === 'number' && expectedType === 'boolean') {
+        } else if (typeof args[0] === "number" && expectedType === "boolean") {
             const value = args[0] as MultiType<T>;
             const boolValue = value !== 0;
             return callback(boolValue as MultiType<T>);
         }
 
-        throw new Error(`Error in event ${event}: Expected ${expectedType} but got ${typeof args[0]}`);
+        throw new Error(
+            `Error in event ${event}: Expected ${expectedType} but got ${typeof args[0]}`
+        );
     });
+}
+
+interface ISendMessage {
+    client: OSC;
+    path: string;
+    value: string | number;
+    signal: string;
+}
+
+/**
+ * Sends an OSC message to the DAW and logs the message as a signal.
+ *
+ * @param {ISendMessage} opts - Options for the message to send.
+ * @param {OSC} opts.client - The OSC client that will send the message.
+ * @param {string} opts.path - The path of the message to send.
+ * @param {string | number} opts.value - The value of the message to send.
+ * @param {string} opts.signal - The name of the signal to log.
+ */
+function sendMessage({ client, path, value, signal }: ISendMessage) {
+    client.send(new OSC.Message(path, value), {
+        port: 8000,
+    });
+
+    signalLog(signal, value, path);
 }
 
 export const DAW = {
     Track(id: number) {
         return {
-            Volume: DAWEvents.TrackVolume.replace(':id', id.toString()),
-            Pan: DAWEvents.TrackPan.replace(':id', id.toString()),
-            VuMeter: DAWEvents.TrackVuMeter.replace(':id', id.toString()),
-            Name: DAWEvents.TrackName.replace(':id', id.toString()),
-            Mute: DAWEvents.TrackMute.replace(':id', id.toString()),
-            Solo: DAWEvents.TrackSolo.replace(':id', id.toString()),
-            RecArm: DAWEvents.TrackRecArm.replace(':id', id.toString()),
+            Volume: DAWEvents.TrackVolume.replace(":id", id.toString()),
+            Pan: DAWEvents.TrackPan.replace(":id", id.toString()),
+            VuMeter: DAWEvents.TrackVuMeter.replace(":id", id.toString()),
+            Name: DAWEvents.TrackName.replace(":id", id.toString()),
+            Mute: DAWEvents.TrackMute.replace(":id", id.toString()),
+            Solo: DAWEvents.TrackSolo.replace(":id", id.toString()),
+            RecArm: DAWEvents.TrackRecArm.replace(":id", id.toString()),
             onVolume(client: OSC, callback: (value: number) => void) {
                 onEvent({
                     client,
-                    event: DAWEvents.TrackVolume.replace(':id', id.toString()),
+                    event: DAWEvents.TrackVolume.replace(":id", id.toString()),
                     callback,
-                    expectedType: 'number'
+                    expectedType: "number",
                 });
             },
             onPan(client: OSC, callback: (value: number) => void) {
                 onEvent({
                     client,
-                    event: DAWEvents.TrackPan.replace(':id', id.toString()),
+                    event: DAWEvents.TrackPan.replace(":id", id.toString()),
                     callback,
-                    expectedType: 'number'
+                    expectedType: "number",
                 });
             },
             onVuMeter(client: OSC, callback: (value: number) => void) {
                 onEvent({
                     client,
-                    event: DAWEvents.TrackVuMeter.replace(':id', id.toString()),
+                    event: DAWEvents.TrackVuMeter.replace(":id", id.toString()),
                     callback,
-                    expectedType: 'number'
+                    expectedType: "number",
                 });
             },
             onName(client: OSC, callback: (value: string) => void) {
                 onEvent({
                     client,
-                    event: DAWEvents.TrackName.replace(':id', id.toString()),
+                    event: DAWEvents.TrackName.replace(":id", id.toString()),
                     callback,
-                    expectedType: 'string'
+                    expectedType: "string",
                 });
             },
             onMute(client: OSC, callback: (value: boolean) => void) {
                 onEvent({
                     client,
-                    event: DAWEvents.TrackMute.replace(':id', id.toString()),
+                    event: DAWEvents.TrackMute.replace(":id", id.toString()),
                     callback,
-                    expectedType: 'boolean'
+                    expectedType: "boolean",
                 });
             },
             onSolo(client: OSC, callback: (value: boolean) => void) {
                 onEvent({
                     client,
-                    event: DAWEvents.TrackSolo.replace(':id', id.toString()),
+                    event: DAWEvents.TrackSolo.replace(":id", id.toString()),
                     callback,
-                    expectedType: 'boolean'
+                    expectedType: "boolean",
                 });
             },
             onRecArm(client: OSC, callback: (value: boolean) => void) {
                 onEvent({
                     client,
-                    event: DAWEvents.TrackRecArm.replace(':id', id.toString()),
+                    event: DAWEvents.TrackRecArm.replace(":id", id.toString()),
                     callback,
-                    expectedType: 'boolean'
+                    expectedType: "boolean",
                 });
             },
             setVolume(client: OSC, volume: number) {
-                const event = DAWEvents.TrackVolume.replace(':id', id.toString());
-                client.send(new OSC.Message(event, volume));
-                signalLog(`TRACK_${id}_VOLUME`, volume, event);
+                sendMessage({
+                    client,
+                    path: DAWEvents.TrackVolume.replace(":id", id.toString()),
+                    value: volume,
+                    signal: `TRACK_${id}_VOLUME`,
+                });
             },
             setPan(client: OSC, pan: number) {
-                const event = DAWEvents.TrackPan.replace(':id', id.toString());
-                client.send(new OSC.Message(event, pan));
-                signalLog(`TRACK_${id}_PAN`, pan, event);
+                sendMessage({
+                    client,
+                    path: DAWEvents.TrackPan.replace(":id", id.toString()),
+                    value: pan,
+                    signal: `TRACK_${id}_PAN`,
+                });
             },
             setMute(client: OSC, muted: boolean) {
-                const event = DAWEvents.TrackMute.replace(':id', id.toString());
-                client.send(new OSC.Message(event, boolToNum(muted)));
-                signalLog(`TRACK_${id}_MUTE`, boolToNum(muted), event);
+                sendMessage({
+                    client,
+                    path: DAWEvents.TrackMute.replace(":id", id.toString()),
+                    value: boolToNum(muted),
+                    signal: `TRACK_${id}_MUTE`,
+                });
             },
             setSolo(client: OSC, soloed: boolean) {
-                const event = DAWEvents.TrackSolo.replace(':id', id.toString());
-                client.send(new OSC.Message(event, boolToNum(soloed)));
-                signalLog(`TRACK_${id}_SOLO`, boolToNum(soloed), event);
+                sendMessage({
+                    client,
+                    path: DAWEvents.TrackSolo.replace(":id", id.toString()),
+                    value: boolToNum(soloed),
+                    signal: `TRACK_${id}_SOLO`,
+                });
             },
             setRecArm(client: OSC, recArmed: boolean) {
-                const event = DAWEvents.TrackRecArm.replace(':id', id.toString());
-                client.send(new OSC.Message(event, boolToNum(recArmed)));
-                signalLog(`TRACK_${id}_RECARM`, boolToNum(recArmed), event);
-            }
-        }
+                sendMessage({
+                    client,
+                    path: DAWEvents.TrackRecArm.replace(":id", id.toString()),
+                    value: boolToNum(recArmed),
+                    signal: `TRACK_${id}_RECARM`,
+                });
+            },
+        };
     },
     Transport: {
         Record: DAWEvents.Record,
@@ -193,7 +238,7 @@ export const DAW = {
                 client,
                 event: DAWEvents.Record,
                 callback,
-                expectedType: 'boolean'
+                expectedType: "boolean",
             });
         },
         onPlay(client: OSC, callback: (value: boolean) => void) {
@@ -201,7 +246,7 @@ export const DAW = {
                 client,
                 event: DAWEvents.Play,
                 callback,
-                expectedType: 'boolean'
+                expectedType: "boolean",
             });
         },
         onPause(client: OSC, callback: (value: boolean) => void) {
@@ -209,7 +254,7 @@ export const DAW = {
                 client,
                 event: DAWEvents.Pause,
                 callback,
-                expectedType: 'boolean'
+                expectedType: "boolean",
             });
         },
         onStop(client: OSC, callback: (value: boolean) => void) {
@@ -217,7 +262,7 @@ export const DAW = {
                 client,
                 event: DAWEvents.Stop,
                 callback,
-                expectedType: 'boolean'
+                expectedType: "boolean",
             });
         },
         onMetronome(client: OSC, callback: (value: boolean) => void) {
@@ -225,7 +270,7 @@ export const DAW = {
                 client,
                 event: DAWEvents.Metronome,
                 callback,
-                expectedType: 'boolean'
+                expectedType: "boolean",
             });
         },
         onRepeat(client: OSC, callback: (value: boolean) => void) {
@@ -233,39 +278,57 @@ export const DAW = {
                 client,
                 event: DAWEvents.Repeat,
                 callback,
-                expectedType: 'boolean'
+                expectedType: "boolean",
             });
         },
         setRecord(client: OSC) {
-            const event = DAWEvents.Record;
-            client.send(new OSC.Message(event, 1));
-            signalLog(DAWSignals.TransportRecord, 1, event);
+            sendMessage({
+                client,
+                path: DAWEvents.Record,
+                value: 1,
+                signal: DAWSignals.TransportRecord,
+            });
         },
         setPlay(client: OSC) {
-            const event = DAWEvents.Play;
-            client.send(new OSC.Message(event, 1));
-            signalLog(DAWSignals.TransportPlay, 1, event);
+            sendMessage({
+                client,
+                path: DAWEvents.Play,
+                value: 1,
+                signal: DAWSignals.TransportPlay,
+            });
         },
         setPause(client: OSC) {
-            const event = DAWEvents.Pause;
-            client.send(new OSC.Message(event, 1));
-            signalLog(DAWSignals.TransportPause, 1, event);
+            sendMessage({
+                client,
+                path: DAWEvents.Pause,
+                value: 1,
+                signal: DAWSignals.TransportPause,
+            });
         },
         setStop(client: OSC) {
-            const event = DAWEvents.Stop;
-            client.send(new OSC.Message(event, 1));
-            signalLog(DAWSignals.TransportStop, 1, event);
+            sendMessage({
+                client,
+                path: DAWEvents.Stop,
+                value: 1,
+                signal: DAWSignals.TransportStop,
+            });
         },
         setMetronome(client: OSC, value: boolean) {
-            const event = DAWEvents.Metronome;
-            client.send(new OSC.Message(event, boolToNum(value)));
-            signalLog(DAWSignals.TransportMetronome, boolToNum(value), event);
+            sendMessage({
+                client,
+                path: DAWEvents.Metronome,
+                value: boolToNum(value),
+                signal: DAWSignals.TransportMetronome,
+            });
         },
         setRepeat(client: OSC, value: boolean) {
-            const event = DAWEvents.Repeat;
-            client.send(new OSC.Message(event, boolToNum(value)));
-            signalLog(DAWSignals.TransportRepeat, boolToNum(value), event);
-        }
+            sendMessage({
+                client,
+                path: DAWEvents.Repeat,
+                value: boolToNum(value),
+                signal: DAWSignals.TransportRepeat,
+            });
+        },
     },
     Bank: {
         Next: DAWEvents.BankNext,
@@ -276,29 +339,40 @@ export const DAW = {
                 client,
                 event: DAWEvents.BankSelect,
                 callback,
-                expectedType: 'number'
+                expectedType: "number",
             });
         },
         setBank(client: OSC, bank: number) {
-            const event = DAWEvents.BankSelect;
-            client.send(new OSC.Message(event, bank));
-            signalLog(DAWSignals.BankSelect, bank, event);
+            sendMessage({
+                client,
+                path: DAWEvents.BankSelect,
+                value: bank,
+                signal: DAWSignals.BankSelect,
+            })
         },
         setNextBank(client: OSC) {
-            const event = DAWEvents.BankNext;
-            client.send(new OSC.Message(event, 1));
-            signalLog(DAWSignals.BankNext, 1, event);
+            sendMessage({
+                client,
+                path: DAWEvents.BankNext,
+                value: 1,
+                signal: DAWSignals.BankNext,
+            })
         },
         setPrevBank(client: OSC) {
-            const event = DAWEvents.BankPrev;
-            client.send(new OSC.Message(event, 1));
-            signalLog(DAWSignals.BankPrev, 1, event);
+            sendMessage({
+                client,
+                path: DAWEvents.BankPrev,
+                value: 1,
+                signal: DAWSignals.BankPrev,
+            })
         },
         setTrackCount(client: OSC, count: number) {
-            const event = DAWEvents.TrackCount;
-            client.send(new OSC.Message(event, count));
-            signalLog(DAWSignals.TracksCount, count, event);
-        }
-
-    }
-}
+            sendMessage({
+                client,
+                path: DAWEvents.TracksCount,
+                value: count,
+                signal: DAWSignals.TracksCount
+            })
+        },
+    },
+};
