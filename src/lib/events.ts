@@ -10,6 +10,7 @@ enum DAWEvents {
     TrackMute = `/track/:id/mute`,
     TrackSolo = `/track/:id/solo`,
     TrackRecArm = `/track/:id/recarm`,
+    TrackMonitor = `/track/:id/monitor`,
     TracksCount = "/device/track/count",
     BankSelect = "/device/track/bank/select",
     BankPrev = "/device/track/bank/-",
@@ -184,6 +185,14 @@ export const DAW = {
                     expectedType: "boolean",
                 });
             },
+            onMonitor(client: OSC, callback: (value: number) => void) {
+                onEvent({
+                    client,
+                    event: DAWEvents.TrackMonitor.replace(":id", id.toString()),
+                    callback,
+                    expectedType: "number",
+                });
+            },
             setVolume(client: OSC, volume: number) {
                 sendMessage({
                     client,
@@ -222,6 +231,14 @@ export const DAW = {
                     path: DAWEvents.TrackRecArm.replace(":id", id.toString()),
                     value: boolToNum(recArmed),
                     signal: `TRACK_${id}_RECARM`,
+                });
+            },
+            setMonitor(client: OSC, monitored: number) {
+                sendMessage({
+                    client,
+                    path: DAWEvents.TrackMonitor.replace(":id", id.toString()),
+                    value: monitored,
+                    signal: `TRACK_${id}_MONITOR`,
                 });
             },
         };
