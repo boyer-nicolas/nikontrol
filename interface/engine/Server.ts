@@ -1,7 +1,7 @@
-import { Bank } from '@/controller/Bank';
-import { Transport } from '@/controller/Transport';
-import { Config } from '@/lib/config';
-import { DawInterface } from '@/engine/DawInterface';
+import { Bank } from 'interface/controller/Bank';
+import { Transport } from 'interface/controller/Transport';
+import { Config } from 'interface/lib/config';
+import { DawInterface } from 'interface/engine/DawInterface';
 
 export class Server {
     public dawInterface: DawInterface

@@ -1,5 +1,5 @@
-import { signalLog } from "@/lib/logger";
-import { boolToNum } from "@/lib/utils";
+import { signalLog } from "interface/lib/logger";
+import { boolToNum } from "interface/lib/utils";
 import OSC from "osc-js";
 
 enum DAWEvents {

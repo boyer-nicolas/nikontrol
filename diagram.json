@@ -1,0 +1,91 @@
+{
+    "version": 1,
+    "author": "Uri Shaked",
+    "editor": "wokwi",
+    "parts": [
+        {
+            "type": "wokwi-arduino-uno",
+            "id": "uno",
+            "top": 19.8,
+            "left": 47.4,
+            "attrs": {}
+        },
+        {
+            "type": "wokwi-lcd1602",
+            "id": "lcd",
+            "top": 304,
+            "left": 351.2,
+            "attrs": {
+                "pins": "i2c"
+            }
+        },
+        {
+            "type": "wokwi-slide-potentiometer",
+            "id": "pot1",
+            "top": 129.8,
+            "left": 421.4,
+            "attrs": {
+                "travelLength": "30"
+            }
+        },
+        {
+            "type": "wokwi-led-bar-graph",
+            "id": "bargraph1",
+            "top": 14.4,
+            "left": 561.6,
+            "attrs": {
+                "color": "lime"
+            }
+        },
+        {
+            "type": "wokwi-potentiometer",
+            "id": "pot2",
+            "top": 37.1,
+            "left": 441.4,
+            "attrs": {}
+        }
+    ],
+    "connections": [
+        [
+            "uno:GND.2",
+            "lcd:GND",
+            "black",
+            [
+                "v24",
+                "*",
+                "h-20"
+            ]
+        ],
+        [
+            "uno:5V",
+            "lcd:VCC",
+            "red",
+            [
+                "v28",
+                "*",
+                "h-16"
+            ]
+        ],
+        [
+            "uno:A4",
+            "lcd:SDA",
+            "green",
+            [
+                "v32",
+                "*",
+                "h-12"
+            ]
+        ],
+        [
+            "uno:A5",
+            "lcd:SCL",
+            "blue",
+            [
+                "v36",
+                "*",
+                "h-8"
+            ]
+        ]
+    ],
+    "dependencies": {}
+}

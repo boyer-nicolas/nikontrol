@@ -1,5 +1,5 @@
-import { DAW } from '@/lib/events';
-import { Track } from '@/controller/Track';
+import { DAW } from 'interface/lib/events';
+import { Track } from 'interface/controller/Track';
 import OSC from 'osc-js';
 
 interface IBank {

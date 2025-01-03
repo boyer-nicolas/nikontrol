@@ -1,9 +1,9 @@
-import { Bank } from "@/controller/Bank";
-import { Transport } from "@/controller/Transport";
-import { Config } from "@/lib/config";
-import { DawInterface } from "@/engine/DawInterface";
-import { Server } from "@/engine/Server";
-import { delay } from '@/lib/utils';
+import { Bank } from "interface/controller/Bank";
+import { Transport } from "interface/controller/Transport";
+import { Config } from "interface/lib/config";
+import { DawInterface } from "interface/engine/DawInterface";
+import { Server } from "interface/engine/Server";
+import { delay } from 'interface/lib/utils';
 import { program } from "commander";
 
 export class CLI {

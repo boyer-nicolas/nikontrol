@@ -1,4 +1,4 @@
-import { DAW } from '@/lib/events';
+import { DAW } from 'interface/lib/events';
 import OSC from 'osc-js';
 
 interface ITransport {

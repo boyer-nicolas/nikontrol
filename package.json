@@ -1,12 +1,12 @@
 {
 	"scripts": {
-		"dev": "bun run --hot src/index.ts server",
-		"start": "bun run src/index.ts server",
-		"lint": "eslint ./src/** ",
-		"lint:fix": "eslint ./src/** --fix",
+		"dev": "bun run --hot interface/index.ts server",
+		"start": "bun run interface/index.ts server",
+		"lint": "eslint ./interface/** ",
+		"lint:fix": "eslint ./interface/** --fix",
 		"check": "tsc --project tsconfig.json --noEmit",
-		"build": "bun build --sourcemap --target bun ./src/index.ts --outfile ./dist/index.js",
-		"build:bin": "bun build --compile --target bun ./src/index.ts --outfile ./dist/nikontrol"
+		"build": "bun build --sourcemap --target bun ./interface/index.ts --outfile ./dist/index.js",
+		"build:bin": "bun build --compile --target bun ./interface/index.ts --outfile ./dist/nikontrol"
 	},
 	"version": "1.0.0",
 	"main": "./dist/index.js",
