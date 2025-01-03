@@ -1,5 +1,7 @@
 {
 	"scripts": {
+		"board": "tsx board/index.ts",
+		"board:dev": "tsx watch board/index.ts",
 		"dev": "bun run --hot interface/index.ts server",
 		"start": "bun run interface/index.ts server",
 		"lint": "eslint ./interface/** ",
@@ -12,10 +14,11 @@
 	"main": "./dist/index.js",
 	"author": "Nicolas Boyer",
 	"bin": {
-		"nikontrol": "./dist/index.js"
+		"nikontrol": "./dist/nikontrol"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.17.0",
+		"@types/johnny-five": "^2.1.11",
 		"@types/midi": "^2.0.3",
 		"@types/node": "^22.10.2",
 		"@types/node-osc": "^6.0.3",
@@ -23,6 +26,7 @@
 		"commander": "^12.1.0",
 		"eslint-config-prettier": "^9.1.0",
 		"globals": "^15.14.0",
+		"johnny-five": "^2.1.0",
 		"osc": "^2.4.5",
 		"osc-js": "^2.4.1",
 		"tsx": "^4.19.2",
