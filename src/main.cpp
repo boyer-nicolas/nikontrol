@@ -1,86 +1,79 @@
 #include <Arduino.h>
 
-const int faderCount = 8;
-const int panPotCount = 8;
+int s0 = 2;
+int s1 = 3;
+int s2 = 4;
+int s3 = 5;
 
-const int faderMuxSIG = 34; // Multiplexer output pin
-const int panMuxSIG = 1;    // Multiplexer output pin
+const int faderCount = 8;
 
 // Array to store potentiometer values
-int panPotValues[8];
 int faderValues[8];
 
 #define SAMPLE_COUNT 10
 #define THRESHOLD 2
 
-const uint8_t faderControlPins[] = {
-    19,
-    21,
-    22,
-    23,
-};
-
-/**
- * @brief Initialize the Arduino board.
- *
- * This function is called once when the program starts. It is used to set up the
- * board and initialize the pins.
- *
- * In this case, we set the pin 11 as an output, which is used to control the
- * built-in LED.
- */
 void setup()
 {
-    Serial.begin(115200);
-    while (!Serial)
-    {
-        ; // Wait for serial port to connect
-    }
-    // Set pinMode for multiplexer signal pin
-    pinMode(faderMuxSIG, INPUT);
+    pinMode(s0, OUTPUT);
+    pinMode(s1, OUTPUT);
+    pinMode(s2, OUTPUT);
+    pinMode(s3, OUTPUT);
 
-    // Set pinMode for multiplexer control pins
-    for (int i = 0; i < 4; ++i)
-    {
-        pinMode(faderControlPins[i], OUTPUT);
-    }
+    digitalWrite(s0, LOW);
+    digitalWrite(s1, LOW);
+    digitalWrite(s2, LOW);
+    digitalWrite(s3, LOW);
 
-    delay(1000);
-
-    Serial.println("Setup complete");
+    Serial.begin(9600);
 }
 
-void selectMuxChannel(int channel)
+int readMux(int channel)
 {
+    int controlPin[] = {s0, s1, s2, s3};
+
+    int muxChannel[16][4] = {
+        {0, 0, 0, 0}, // channel 0
+        {1, 0, 0, 0}, // channel 1
+        {0, 1, 0, 0}, // channel 2
+        {1, 1, 0, 0}, // channel 3
+        {0, 0, 1, 0}, // channel 4
+        {1, 0, 1, 0}, // channel 5
+        {0, 1, 1, 0}, // channel 6
+        {1, 1, 1, 0}, // channel 7
+        {0, 0, 0, 1}, // channel 8
+        {1, 0, 0, 1}, // channel 9
+        {0, 1, 0, 1}, // channel 10
+        {1, 1, 0, 1}, // channel 11
+        {0, 0, 1, 1}, // channel 12
+        {1, 0, 1, 1}, // channel 13
+        {0, 1, 1, 1}, // channel 14
+        {1, 1, 1, 1}  // channel 15
+    };
+
+    // loop through the 4 sig
     for (int i = 0; i < 4; i++)
     {
-        digitalWrite(faderControlPins[i], bitRead(channel, i));
+        digitalWrite(controlPin[i], muxChannel[channel][i]);
     }
-    delay(10); // Allow time for the multiplexer to switch
+
+    // read the value at the SIG pin
+    int val = analogRead(A0);
+
+    // return the value
+    return val;
 }
 
-/**
- * @brief The main loop.
- *
- * This function is called repeatedly after the setup() function has been called.
- *
- * This function blinks the built-in LED on the board connected to pin 11.
- */
 void loop()
 {
-    Serial.println("Loop started");
-
-    for (int i = 0; i < faderCount; i++)
+    // Loop through and read all 16 values
+    // Reports back Value at channel 6 is: 346
+    for (int i = 0; i < 8; i++)
     {
-        selectMuxChannel(i);
-        int val = analogRead(faderMuxSIG);
-        faderValues[i] = val;
-        Serial.print("Fader ");
+        Serial.print("Value at channel ");
         Serial.print(i);
-        Serial.print(" value: ");
-        Serial.println(val);
+        Serial.print("is : ");
+        Serial.println(readMux(i));
+        delay(100);
     }
-
-    Serial.println("--------------------");
-    delay(1000);
 }
