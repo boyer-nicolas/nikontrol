@@ -5,13 +5,16 @@ int s1 = 3;
 int s2 = 4;
 int s3 = 5;
 
-const int faderCount = 8;
+int s4 = 8;
+int s5 = 9;
+int s6 = 10;
+int s7 = 11;
 
-// Array to store potentiometer values
-int faderValues[8];
+int faderCount = 8;
+int panPotCount = 8;
 
-#define SAMPLE_COUNT 10
-#define THRESHOLD 2
+int faderControlPins[] = {s0, s1, s2, s3};
+int panPotControlPins[] = {s4, s5, s6, s7};
 
 void setup()
 {
@@ -19,42 +22,29 @@ void setup()
     pinMode(s1, OUTPUT);
     pinMode(s2, OUTPUT);
     pinMode(s3, OUTPUT);
+    pinMode(s4, OUTPUT);
+    pinMode(s5, OUTPUT);
+    pinMode(s6, OUTPUT);
+    pinMode(s7, OUTPUT);
 
     digitalWrite(s0, LOW);
     digitalWrite(s1, LOW);
     digitalWrite(s2, LOW);
     digitalWrite(s3, LOW);
+    digitalWrite(s4, LOW);
+    digitalWrite(s5, LOW);
+    digitalWrite(s6, LOW);
+    digitalWrite(s7, LOW);
 
     Serial.begin(9600);
 }
 
-int readMux(int channel)
+int readMux(int controlPins[], int channel)
 {
-    int controlPin[] = {s0, s1, s2, s3};
-
-    int muxChannel[16][4] = {
-        {0, 0, 0, 0}, // channel 0
-        {1, 0, 0, 0}, // channel 1
-        {0, 1, 0, 0}, // channel 2
-        {1, 1, 0, 0}, // channel 3
-        {0, 0, 1, 0}, // channel 4
-        {1, 0, 1, 0}, // channel 5
-        {0, 1, 1, 0}, // channel 6
-        {1, 1, 1, 0}, // channel 7
-        {0, 0, 0, 1}, // channel 8
-        {1, 0, 0, 1}, // channel 9
-        {0, 1, 0, 1}, // channel 10
-        {1, 1, 0, 1}, // channel 11
-        {0, 0, 1, 1}, // channel 12
-        {1, 0, 1, 1}, // channel 13
-        {0, 1, 1, 1}, // channel 14
-        {1, 1, 1, 1}  // channel 15
-    };
-
     // loop through the 4 sig
     for (int i = 0; i < 4; i++)
     {
-        digitalWrite(controlPin[i], muxChannel[channel][i]);
+        digitalWrite(controlPins[i], bitRead(channel, i));
     }
 
     // read the value at the SIG pin
@@ -66,14 +56,23 @@ int readMux(int channel)
 
 void loop()
 {
-    // Loop through and read all 16 values
-    // Reports back Value at channel 6 is: 346
-    for (int i = 0; i < 8; i++)
+    // Read faders
+    for (int i = 0; i < faderCount; i++)
     {
-        Serial.print("Value at channel ");
+        Serial.print("Fader ");
         Serial.print(i);
-        Serial.print("is : ");
-        Serial.println(readMux(i));
+        Serial.print("value is : ");
+        Serial.println(readMux(faderControlPins, i));
+        delay(100);
+    }
+
+    // Read pan pots
+    for (int i = 0; i < panPotCount; i++)
+    {
+        Serial.print("Pan Pot ");
+        Serial.print(i);
+        Serial.print("value is : ");
+        Serial.println(readMux(panPotControlPins, i));
         delay(100);
     }
 }
