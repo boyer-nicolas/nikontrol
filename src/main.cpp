@@ -39,7 +39,7 @@ void setup()
     Serial.begin(9600);
 }
 
-int readMux(int controlPins[], int channel)
+int readMux(int controlPins[], int channel, byte analogChannel)
 {
     // loop through the 4 sig
     for (int i = 0; i < 4; i++)
@@ -48,10 +48,22 @@ int readMux(int controlPins[], int channel)
     }
 
     // read the value at the SIG pin
-    int val = analogRead(A0);
+    int val = analogRead(analogChannel);
 
     // return the value
     return val;
+}
+
+void writeMux(int controlPins[], int channel, int value, byte analogChannel)
+{
+    // loop through the 4 control pins
+    for (int i = 0; i < 4; i++)
+    {
+        digitalWrite(controlPins[i], bitRead(channel, i));
+    }
+
+    // write the value to the SIG pin
+    digitalWrite(analogChannel, value);
 }
 
 void loop()
@@ -59,20 +71,30 @@ void loop()
     // Read faders
     for (int i = 0; i < faderCount; i++)
     {
-        Serial.print("Fader ");
-        Serial.print(i);
-        Serial.print("value is : ");
-        Serial.println(readMux(faderControlPins, i));
+        int val = readMux(faderControlPins, i, A0);
+        if (val > 0)
+        {
+            Serial.print("Fader ");
+            Serial.print(i);
+            Serial.print("value is : ");
+            Serial.println(val);
+        }
+
         delay(100);
     }
 
     // Read pan pots
     for (int i = 0; i < panPotCount; i++)
     {
-        Serial.print("Pan Pot ");
-        Serial.print(i);
-        Serial.print("value is : ");
-        Serial.println(readMux(panPotControlPins, i));
+        int val = readMux(panPotControlPins, i, A1);
+        if (val > 0)
+        {
+            Serial.print("Pan Pot ");
+            Serial.print(i);
+            Serial.print("value is : ");
+            Serial.println(val);
+        }
+
         delay(100);
     }
 }

@@ -159,62 +159,6 @@
             "left": 500,
             "rotate": 90,
             "attrs": {}
-        },
-        {
-            "type": "wokwi-relay-module",
-            "id": "relay1",
-            "top": -1123,
-            "left": 892.8,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-relay-module",
-            "id": "relay2",
-            "top": -979,
-            "left": 892.8,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-relay-module",
-            "id": "relay3",
-            "top": -835,
-            "left": 892.8,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-relay-module",
-            "id": "relay4",
-            "top": -681.4,
-            "left": 892.8,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-relay-module",
-            "id": "relay5",
-            "top": -527.8,
-            "left": 883.2,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-relay-module",
-            "id": "relay6",
-            "top": -383.8,
-            "left": 883.2,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-relay-module",
-            "id": "relay7",
-            "top": -230.2,
-            "left": 883.2,
-            "attrs": {}
-        },
-        {
-            "type": "wokwi-relay-module",
-            "id": "relay8",
-            "top": -86.2,
-            "left": 892.8,
-            "attrs": {}
         }
     ],
     "connections": [
@@ -330,109 +274,6 @@
             ]
         ],
         [
-            "fader2:VCC",
-            "fader3:VCC",
-            "red",
-            [
-                "h0"
-            ]
-        ],
-        [
-            "fader3:VCC",
-            "fader4:VCC",
-            "red",
-            [
-                "h0"
-            ]
-        ],
-        [
-            "fader4:VCC",
-            "fader5:VCC",
-            "red",
-            [
-                "v0",
-                "v-150"
-            ]
-        ],
-        [
-            "fader5:VCC",
-            "fader6:VCC",
-            "red",
-            [
-                "h0"
-            ]
-        ],
-        [
-            "fader6:VCC",
-            "fader7:VCC",
-            "red",
-            [
-                "h0"
-            ]
-        ],
-        [
-            "fader7:VCC",
-            "fader8:VCC",
-            "red",
-            [
-                "h0"
-            ]
-        ],
-        [
-            "pan2:VCC",
-            "pan3:VCC",
-            "red",
-            [
-                "h-8.3",
-                "v150"
-            ]
-        ],
-        [
-            "pan3:VCC",
-            "pan4:VCC",
-            "red",
-            [
-                "h-8.3",
-                "v150"
-            ]
-        ],
-        [
-            "pan4:VCC",
-            "pan5:VCC",
-            "red",
-            [
-                "h-8.3",
-                "v150"
-            ]
-        ],
-        [
-            "pan5:VCC",
-            "pan6:VCC",
-            "red",
-            [
-                "h-8.3",
-                "v150"
-            ]
-        ],
-        [
-            "pan6:VCC",
-            "pan7:VCC",
-            "red",
-            [
-                "h-8.3",
-                "v150"
-            ]
-        ],
-        [
-            "pan7:VCC",
-            "pan8:VCC",
-            "red",
-            [
-                "h-8.3",
-                "v150"
-            ]
-        ],
-        [
             "fader4:SIG",
             "mux1:I3",
             "magenta",
@@ -480,15 +321,6 @@
                 "v22",
                 "h-364.8",
                 "v950.4"
-            ]
-        ],
-        [
-            "pan2:VCC",
-            "pan1:VCC",
-            "red",
-            [
-                "h-8.3",
-                "v-150"
             ]
         ],
         [
@@ -750,9 +582,9 @@
             [
                 "h9.63",
                 "v211.2",
-                "h-153.6",
+                "h-182.4",
                 "v259.2",
-                "h212.84"
+                "h241.64"
             ]
         ],
         [
@@ -842,21 +674,13 @@
             ]
         ],
         [
-            "fader2:VCC",
-            "fader1:VCC",
-            "red",
-            [
-                "h0"
-            ]
-        ],
-        [
             "mux2:EN",
             "uno:GND.1",
             "black",
             [
-                "h96.03",
+                "h67.23",
                 "v201.6",
-                "h158.74"
+                "h187.54"
             ]
         ],
         [
@@ -864,9 +688,9 @@
             "uno:5V",
             "red",
             [
-                "h86.43",
+                "h57.63",
                 "v480",
-                "h212.84"
+                "h241.64"
             ]
         ],
         [
@@ -874,9 +698,9 @@
             "uno:GND.1",
             "black",
             [
-                "h96.03",
+                "h67.23",
                 "v182.4",
-                "h163.2"
+                "h187.54"
             ]
         ],
         [
@@ -884,9 +708,9 @@
             "uno:A1",
             "cyan",
             [
-                "h76.83",
+                "h48.03",
                 "v547.2",
-                "h279.94"
+                "h308.74"
             ]
         ],
         [
